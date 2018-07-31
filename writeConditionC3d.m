@@ -19,7 +19,7 @@ function btk3 = writeConditionC3d(Session,Condition,btk2,file2,k)
 if k == 1
     btkWriteAcquisition(btk2,'temp.c3d');
 else
-    clear btk2;
+%     clear btk2;
     % Load previous merged file
     btk1 = btkReadAcquisition('temp.c3d');
     Marker1 = btkGetMarkers(btk1);
@@ -43,7 +43,7 @@ else
     n1 = length(Marker1.(nMarker{1}));
     t1 = btkGetLastFrame(btk1)/btkGetPointFrequency(btk1);
     % Load next file to be merged
-    btk2 = btkReadAcquisition([strrep(file2,'.c3d',''),'_out.c3d']);
+%     btk2 = btkReadAcquisition([strrep(file2,'.c3d',''),'_out.c3d']);
     Marker2 = btkGetMarkers(btk2);
     Forceplate2 = btkGetForcePlatforms(btk2);
     tGrf2 = btkGetForcePlatformWrenches(btk2);
@@ -69,7 +69,7 @@ else
     nEMG = 1;
     for m = 1:size(nAnalog,1)
         if ~isempty(strfind(nAnalog{m},'R_')) || ~isempty(strfind(nAnalog{m},'L_'))
-            btkAppendAnalog(btk3,Session.EMG{nEMG},...
+            btkAppendAnalog(btk3,nAnalog{m},...
                 [Analog1.(nAnalog{m});Analog2.(nAnalog{m})],'EMG signal (mV)');
             nEMG = nEMG+1;
         end

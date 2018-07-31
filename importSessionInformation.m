@@ -21,13 +21,13 @@ filename = dir('*.xlsm');
 Excel = actxserver('Excel.Application');
 Excel.Workbooks.Open([c3dFolder,'\',filename(1).name]);
 Excel.Workbooks.Item(filename(1).name).RunAutoMacros(1);
-File =  [c3dFolder,'\',filename(1).name];
-if ~exist(File,'file')
-    ExcelWorkbook = Excel.Workbooks.Add;
-    ExcelWorkbook.SaveAs(File,1);
-    ExcelWorkbook.Close(false);
-end
-Excel.Workbooks.Open(File); 
+% File =  [c3dFolder,'\',filename(1).name];
+% if ~exist(File,'file')
+%     ExcelWorkbook = Excel.Workbooks.Add;
+%     ExcelWorkbook.SaveAs(File,1);
+%     ExcelWorkbook.Close(false);
+% end
+% Excel.Workbooks.Open(File); 
 [~,~,temp1] = xlsread1(Excel,filename(1).name,1,'B2:K112');
 
 % =========================================================================
@@ -203,7 +203,7 @@ end
 j = 1;
 Session.Trial = [];
 for i = index_trial(1):index_trial(end)
-    if ~isnan(temp1{i,4})                                                  % If no condition is defined, the file is not used
+    if ~isnan(temp1{i,6})|~isnan(temp1{i,7})|~isnan(temp1{i,8})|~isnan(temp1{i,9})% If no condition is defined, the file is not used
         Session.Trial(j).filename = [temp1{i,1},'.c3d'];
         Session.Trial(j).s(1,1) = temp1{i,2};                              % Column 1: right foot, column2: left foot
         Session.Trial(j).s(1,2) = temp1{i,3};                              % No GRF: 0, GRF on forceplate1: 1, GRF onf forceplate2: 2

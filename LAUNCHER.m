@@ -35,8 +35,8 @@ disp(' ');
 % Set toolbox folders
 % =========================================================================
 disp('Initialisation ...');
-toolboxFolder = 'C:\Users\florent.moissenet\Documents\Professionnel\routines\github\CGA_Rehazenter_Toolbox';
-normativeFile = 'C:\Users\florent.moissenet\Documents\Professionnel\routines\github\CGA_Rehazenter_Toolbox\norm\Normes spontanee.mat';
+toolboxFolder = 'C:\Users\celine.schreiber\Documents\MATLAB\Posturo\CGA_Rehazenter_Toolbox';
+normativeFile = 'C:\Users\celine.schreiber\Documents\MATLAB\Posturo\CGA_Rehazenter_Toolbox\norm\Normes spontanee.mat';
 reportFolder = 'X:\Reports';
 addpath(toolboxFolder);
 addpath(genpath([toolboxFolder,'\module']));
@@ -46,7 +46,7 @@ disp(' ');
 % =========================================================================
 % Set patient folder
 % =========================================================================
-c3dFolder = 'C:\Users\florent.moissenet\Documents\Professionnel\routines\github\CGA_Rehazenter_Toolbox\example';
+c3dFolder ='C:\Users\celine.schreiber\Documents\MATLAB\Toolbox_Rehazenter_Normatives\normativeData\SS2014006';% 'C:\Users\celine.schreiber\Documents\MATLAB\Posturo\CGA_Rehazenter_Toolbox\example';
 matFolder = c3dFolder;
 
 % =========================================================================

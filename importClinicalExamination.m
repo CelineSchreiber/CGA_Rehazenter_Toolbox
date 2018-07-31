@@ -21,12 +21,12 @@ Excel = actxserver('Excel.Application');
 Excel.Workbooks.Open([c3dFolder,'\',filename(1).name]);
 Excel.Workbooks.Item(filename(1).name).RunAutoMacros(1);
 File =  [c3dFolder,'\',filename(1).name];
-if ~exist(File,'file')
-    ExcelWorkbook = Excel.Workbooks.Add;
-    ExcelWorkbook.SaveAs(File,1);
-    ExcelWorkbook.Close(false);
-end
-Excel.Workbooks.Open(File); 
+% if ~exist(File,'file')
+%     ExcelWorkbook = Excel.Workbooks.Add;
+%     ExcelWorkbook.SaveAs(File,1);
+%     ExcelWorkbook.Close(false);
+% end
+% Excel.Workbooks.Open(File); 
 
 % =========================================================================
 % Load clinical examination data

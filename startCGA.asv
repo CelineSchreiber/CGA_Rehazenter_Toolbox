@@ -231,7 +231,7 @@ for i = 1:length(Session.conditions)
                 [Joint,btk2] = computeJointKinematics_headTrunk(Segment,btk2); 
                 % Store data in Condition (keep only intra cycle data)
                 Condition(i).Trial(k).HeadTrunk = ...
-                    exportCondition_headTrunk(Condition(i).Trial(k).HeadTrunk,Segment,Joint,Marker,Vmarker,Event,fMarker);
+                    exportCondition_headTrunk(Condition(i).Trial(k).HeadTrunk,Segment,Joint,Marker,Vmarker,Event,Spatiotemporal,fMarker);
             end
 
             % Foot limb kinematic chain
@@ -247,15 +247,15 @@ for i = 1:length(Session.conditions)
             % Merge files of a same condition
             % -------------------------------------------------------------
             cd(c3dFolder);
-%             writeConditionC3d(Session,Condition(i),btk2,Session.Trial(j).filename,k);
+            writeConditionC3d(Session,Condition(i),btk2,Session.Trial(j).filename,k);
             cd(toolboxFolder);
             k = k+1;
         end
     end 
     cd(c3dFolder);
-    filename = [Patient.lastname,'_',Patient.firstname,'_',regexprep(Patient.birthdate,'/',''),'_',Condition(i).name,'_',regexprep(Session.date,'/',''),'.c3d'];
-%     system(['ren temp.c3d ',filename]);
-%     system(['C:\Users\celine.schreiber\Downloads\Mokka\Mokka.exe -c ',toolboxFolder,'\LWBM_model.mvc -p ',filename]);
+    filename = [Patient.lastname,'_',Patient.firstname,'_',regexprep(Patient.birthdate,'/',''),'_',Condition.name,'_',regexprep(Session.date,'/',''),'.c3d'];
+    system(['ren temp.c3d ',filename]);
+    system(['C:\Users\celine.schreiber\Downloads\Mokka\Mokka.exe -c ',toolboxFolder,'\LWBM_model.mvc -p ',filename]);
     cd(toolboxFolder);
 end
 

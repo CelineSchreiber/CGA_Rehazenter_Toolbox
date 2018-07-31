@@ -39,3 +39,4 @@ for j = 1:size(nMarker,1)
     % Store Marker as 3-array vectors
     Marker.(nMarker{j}) = permute(Marker.(nMarker{j}),[2,3,1]);
 end
+    

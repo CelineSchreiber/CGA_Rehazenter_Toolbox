@@ -12,35 +12,34 @@
 
 function MaxEMG = setMaxEMG(Session,Analog,MaxEMG,n,fAnalog)
 
+Analog = keepTrialEMGOnly(Analog);
 nAnalog = fieldnames(Analog);
 for j = 1:length(nAnalog)
-    if strfind(nAnalog{j},'EMG_')
-        % Rebase (remove signal mean)
-        temp = Analog.(nAnalog{j}) - mean(Analog.(nAnalog{j}));
-        % Band-pass filter (Butterworth 2nd order, 30-300 Hz)
-        [B,A] = butter(2,[30/(fAnalog/2) 300/(fAnalog/2)],'bandpass');
-        temp = filtfilt(B, A, temp);
-        % Rectification (absolute value of the signal)
-        temp = abs(temp);
-        % Low pass filter (Butterworth 2nd order, 30-300 Hz)
-        [B,A] = butter(2,25/(fAnalog/2),'low');
-        temp = filtfilt(B, A, temp);
-        % Interpolate to number of marker frames
-        x = 1:length(temp);
-        xx = linspace(1,length(temp),n);
-        temp2 = temp;
-        temp3 = [];
-        temp3 = (interp1(x,temp2,xx,'spline'))';
-        % Max value
-        if ~isempty(MaxEMG)
-            if isfield(MaxEMG,nAnalog{j})
-                MaxEMG.(nAnalog{j}).data = [MaxEMG.(nAnalog{j}).data; temp3];
-            else
-                MaxEMG.(nAnalog{j}).data = temp3;
-            end
+    % Rebase (remove signal mean)
+    temp = Analog.(nAnalog{j}) - mean(Analog.(nAnalog{j}));
+    % Band-pass filter (Butterworth 2nd order, 30-300 Hz)
+    [B,A] = butter(2,[30/(fAnalog/2) 300/(fAnalog/2)],'bandpass');
+    temp = filtfilt(B, A, temp);
+    % Rectification (absolute value of the signal)
+    temp = abs(temp);
+    % Low pass filter (Butterworth 2nd order, 30-300 Hz)
+    [B,A] = butter(2,25/(fAnalog/2),'low');
+    temp = filtfilt(B, A, temp);
+    % Interpolate to number of marker frames
+    x = 1:length(temp);
+    xx = linspace(1,length(temp),n);
+    temp2 = temp;
+    temp3 = [];
+    temp3 = (interp1(x,temp2,xx,'spline'))';
+    % Max value
+    if ~isempty(MaxEMG)
+        if isfield(MaxEMG,nAnalog{j})
+            MaxEMG.(nAnalog{j}).data = [MaxEMG.(nAnalog{j}).data; temp3];
         else
             MaxEMG.(nAnalog{j}).data = temp3;
         end
+    else
+        MaxEMG.(nAnalog{j}).data = temp3;
     end
 end
 % Rename fields with muscle names
