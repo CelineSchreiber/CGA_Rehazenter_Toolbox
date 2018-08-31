@@ -11,7 +11,7 @@
 % Version: 1
 % =========================================================================
 
-function [Condition,btk2] = setStaticSegment_headTrunk(Condition,Marker,btk2)
+function [Condition] = setStaticSegment_headTrunk(Condition,Marker)
 
 % Pelvis parameters
 % ---------------------------------------------------------------------
@@ -22,8 +22,8 @@ end
 % Rachis (axe occipital) parameters
 % ---------------------------------------------------------------------
 
-if isfield(Marker,'CV7') && isfield(Marker,'R_SAE') && isfield(Marker,'L_SAE')  
-    Segment(3).rM = [Marker.CV7,Marker.R_SAE,Marker.L_SAE];
+if isfield(Marker,'CV7') && isfield(Marker,'R_SAE') && isfield(Marker,'L_SAE') && isfield(Marker,'R_IPS') && isfield(Marker,'L_IPS')  
+    Segment(3).rM = [Marker.CV7,Marker.R_SAE,Marker.L_SAE,Marker.R_IPS,Marker.L_IPS];
 end
     
 % Scapular belt parameters
@@ -35,8 +35,9 @@ end
 % Head parameters
 % ---------------------------------------------------------------------    
 if isfield(Marker,'R_HDF') && isfield(Marker,'R_HDB') && isfield(Marker,'L_HDF') && isfield(Marker,'L_HDB'); 
-    Segment(1).rM_RHDF = [Marker.L_HDF,Marker.R_HDB,Marker.L_HDB];
-    Segment(1).rM_LHDF = [Marker.R_HDF,Marker.R_HDB,Marker.L_HDB];
+    Segment(1).rM = [Marker.R_HDF,Marker.L_HDF,Marker.L_HDB,Marker.R_HDB];
+    Segment(1).rM_RHDF = [Marker.L_HDF,Marker.L_HDB,Marker.R_HDB];
+    Segment(1).rM_LHDF = [Marker.R_HDF,Marker.L_HDB,Marker.R_HDB];
     Segment(1).rM_RHDB = [Marker.R_HDF,Marker.L_HDF,Marker.L_HDB];
     Segment(1).rM_LHDB = [Marker.R_HDF,Marker.L_HDF,Marker.R_HDB];
     Vmarker.R_HDF = Marker.R_HDF;

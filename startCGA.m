@@ -120,7 +120,7 @@ for i = 1:length(Session.conditions)
             if Session.Static(j).kinematics.headTrunk == 1
                 disp('      Head/Trunk');
                 % Set body segments
-                [Condition(i),btk2] = setStaticSegment_headTrunk(Condition(i),Marker,btk2);
+                [Condition(i)] = setStaticSegment_headTrunk(Condition(i),Marker);
             end
             % Foot limb kinematic chain
             % Compute leg length

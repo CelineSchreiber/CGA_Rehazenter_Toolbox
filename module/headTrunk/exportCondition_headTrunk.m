@@ -28,11 +28,11 @@ R_ko = (linspace(1,R_n,101))';
 % -------------------------------------------------------------------------
 % Marker
 % -------------------------------------------------------------------------
-nMarker = fieldnames(Marker);
-for i = 1:size(nMarker,1)
-    temp = permute(Marker.(nMarker{i})(:,:,Event.RHS(1):Event.RHS(2)),[3,1,2]);
-    Output.Rside.Marker.(nMarker{i}) = permute(interp1(R_k,temp,R_ko,'spline'),[2,3,1]);
-end
+% nMarker = fieldnames(Marker);
+% for i = 1:size(nMarker,1)
+%     temp = permute(Marker.(nMarker{i})(:,:,Event.RHS(1):Event.RHS(2)),[3,1,2]);
+%     Output.Rside.Marker.(nMarker{i}) = permute(interp1(R_k,temp,R_ko,'spline'),[2,3,1]);
+% end
 
 % -------------------------------------------------------------------------
 % Vmarker

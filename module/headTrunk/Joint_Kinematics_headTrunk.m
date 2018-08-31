@@ -74,5 +74,5 @@ function Joint = Joint_Kinematics_headTrunk(Segment)
 Joint(1).T  = Mprod_array3(Tinv_array3(Segment(1).R),Segment(2).R);
 Joint(1).Euler = R2mobileZXY_array3(Joint(1).T(1:3,1:3,:));
 % Scapular belt/Pelvis 
-Joint(2).T  = Mprod_array3(Tinv_array3(Segment(2).R),Segment(3).R);
+Joint(2).T  = Mprod_array3(Tinv_array3(Segment(2).R),Segment(4).R);
 Joint(2).Euler = R2mobileZXY_array3(Joint(2).T(1:3,1:3,:));

@@ -68,7 +68,7 @@
 function Segment = Segment_Kinematics_headTrunk(Segment)
 
 % Number of frames
-n = size(Segment(2).Q,3);
+n = size(Segment(2).Z,3);
 s = size(Segment,2);
     
 % =====================================================================
