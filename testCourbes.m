@@ -42,16 +42,33 @@ for i=1:1
     hold on;plot(-permute(Output(1).Trial(i).LowerLimb.Rside.Segment(5).FE,[3,2,1]),'g')
     figure;plot(Condition.Gait(i).Rkinematics.Prota)
     hold on;plot(permute(Output(1).Trial(i).LowerLimb.Rside.Segment(5).IER,[3,2,1]),'g')
-    figure;plot(Condition.Gait(i).Rkinematics.FE2)                          %OK
-    hold on;plot(permute(Output(1).Trial(i).LowerLimb.Rside.Joint(2).FE,[3,2,1]),'g')%OK
-    figure;plot(Condition.Gait(i).Rkinematics.FE3)                          %OK
-    hold on;plot(permute(Output(1).Trial(i).LowerLimb.Rside.Joint(3).FE,[3,2,1]),'g')%OK
-    figure;plot(Condition.Gait(i).Rkinematics.FE4)
-    hold on;plot(permute(Output(1).Trial(i).LowerLimb.Rside.Joint(4).FE,[3,2,1]),'g')
+    
+    figure;plot(Condition.Gait(i).Rkinematics.FE2)                          
+    hold on;plot(permute(Output(1).Trial(i).LowerLimb.Rside.Joint(2).FE,[3,2,1]),'g')
+    figure;plot(Condition.Gait(i).Rkinematics.AA2)                          
+    hold on;plot(permute(Output(1).Trial(i).LowerLimb.Rside.Joint(2).AA,[3,2,1]),'g')
+    figure;plot(Condition.Gait(i).Rkinematics.IER2)                          
+    hold on;plot(permute(Output(1).Trial(i).LowerLimb.Rside.Joint(2).IER,[3,2,1]),'g')
+    
+    figure;plot(Condition.Gait(i).Rkinematics.FE3)
+    hold on;plot(permute(Output(1).Trial(i).LowerLimb.Rside.Joint(3).FE,[3,2,1]),'g')
     figure;plot(Condition.Gait(i).Rkinematics.AA3)
     hold on;plot(permute(Output(1).Trial(i).LowerLimb.Rside.Joint(3).AA,[3,2,1]),'g')
     figure;plot(Condition.Gait(i).Rkinematics.IER3)
     hold on;plot(permute(Output(1).Trial(i).LowerLimb.Rside.Joint(3).IER,[3,2,1]),'g')
+    
+    figure;plot(Condition.Gait(i).Rkinematics.FE4)
+    hold on;plot(permute(Output(1).Trial(i).LowerLimb.Rside.Joint(4).FE,[3,2,1]),'g')
+    figure;plot(Condition.Gait(i).Rkinematics.AA4)
+    hold on;plot(permute(Output(1).Trial(i).LowerLimb.Rside.Joint(4).AA,[3,2,1]),'g')
+    figure;plot(Condition.Gait(i).Rkinematics.IER4)
+    hold on;plot(permute(Output(1).Trial(i).LowerLimb.Rside.Joint(4).IER,[3,2,1]),'g')
+    
+    
     figure;plot(Condition.Gait(i).Rkinematics.Ftilt)
-    hold on;plot(permute(Output(1).Trial(i).LowerLimb.Rside.Segment(2).FE,[3,2,1])-180,'g')
+    hold on;plot(permute(Output(1).Trial(i).LowerLimb.Rside.Segment(2).FE,[3,2,1]),'g')
+    figure;plot(Condition.Gait(i).Rkinematics.Fobli)
+    hold on;plot(permute(Output(1).Trial(i).LowerLimb.Rside.Segment(2).IER,[3,2,1]),'g')
+    figure;plot(Condition.Gait(i).Rkinematics.Frota)
+    hold on;plot(permute(-Output(1).Trial(i).LowerLimb.Rside.Segment(2).AA,[3,2,1]),'g')
 end
