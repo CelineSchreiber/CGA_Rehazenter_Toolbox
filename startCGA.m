@@ -113,12 +113,18 @@ for i = 1:length(Session.conditions)
                 disp('      Lower limb');
                 % Set body segments
                 [Condition(i),Segment,Vmarker,btk2] = setStaticSegment_lowerLimb(Session,Patient,Condition(i),Marker,btk2);
+                % Compute leg length
+                Session = setLegLength_lowerLimb(Session,Marker);
             end
             % Upper limb kinematic chain
             % Head/Trunk limb kinematic chain
             % Foot limb kinematic chain
-            % Compute leg length
-            Session = setLegLength_lowerLimb(Session,Marker);
+            Condition(i).Static.MultisegFoot = [];
+            if Session.Static(j).kinematics.multisegFoot == 1
+                disp('      Multi segmental foot');
+                % Set body segments
+                [Condition(i),btk2] = setStaticSegment_multisegFoot(Condition(i),Marker,btk2);
+            end  
             % Export processed files
             cd(c3dFolder);
             btkWriteAcquisition(btk2,[strrep(Session.Static(j).filename,'.c3d',''),'_out.c3d']);
@@ -137,19 +143,21 @@ for i = 1:length(Session.conditions)
     % Set the maximum values through the trial of a condition for EMGs
     % ---------------------------------------------------------------------
     MaxEMG = [];
-    for j = 1:length(Session.Trial)
-        if strcmp(Session.Trial(j).condition,Condition(i).name)
-            trial = Session.Trial(j).file;
-            Analog = btkGetAnalogs(trial);
-            fAnalog = btkGetAnalogFrequency(trial);
-            n = btkGetLastFrame(trial)-btkGetFirstFrame(trial)+1;
-            MaxEMG = setMaxEMG(Session,Analog,MaxEMG,n,fAnalog);
+    if ~isempty(find(~strcmp(Session.EMG,'none')))
+        for j = 1:length(Session.Trial)
+            if strcmp(Session.Trial(j).condition,Condition(i).name)
+                trial = Session.Trial(j).file;
+                Analog = btkGetAnalogs(trial);
+                fAnalog = btkGetAnalogFrequency(trial);
+                n = btkGetLastFrame(trial)-btkGetFirstFrame(trial)+1;
+                MaxEMG = setMaxEMG(Session,Analog,MaxEMG,n,fAnalog);
+            end
         end
-    end
-    nMaxEMG = fieldnames(MaxEMG);
-    for j = 1:length(nMaxEMG)
-        MaxEMG.(nMaxEMG{j}).data = sort(MaxEMG.(nMaxEMG{j}).data,1,'descend');
-        MaxEMG.(nMaxEMG{j}).max = mean(MaxEMG.(nMaxEMG{j}).data(1:10));
+        nMaxEMG = fieldnames(MaxEMG);
+        for j = 1:length(nMaxEMG)
+            MaxEMG.(nMaxEMG{j}).data = sort(MaxEMG.(nMaxEMG{j}).data,1,'descend');
+            MaxEMG.(nMaxEMG{j}).max = mean(MaxEMG.(nMaxEMG{j}).data(1:10));
+        end
     end
     
     % Compute biomechanical parameters
@@ -177,12 +185,16 @@ for i = 1:length(Session.conditions)
             [Marker,btk2] = importTrialMarker(Marker,Event,n0,fMarker);
             % Import reaction forces
             [Grf,tGrf] = importTrialReaction(Event,Forceplate,tGrf,Grf,n0,n,fMarker,fAnalog);
-            % Import EMG signals
-            [EMG,btk2] = importTrialEMG(Session,Analog,Event,MaxEMG,btk2,n0,n,fMarker,fAnalog);
+            if ~isempty(MaxEMG)
+                % Import EMG signals
+                [EMG,btk2] = importTrialEMG(Session,Analog,Event,MaxEMG,btk2,n0,n,fMarker,fAnalog);
+                % Export normalisation values
+                btk2 = exportNormalisationValues(Session,Patient,MaxEMG,btk2);
+            else
+                EMG=[];
+            end
             % Update and export events
             [Event,btk2] = exportEvents(Event,trial,btk2,fMarker);
-            % Export normalisation values
-            btk2 = exportNormalisationValues(Session,Patient,MaxEMG,btk2);
             
             % Lower limb kinematic chain
             % -------------------------------------------------------------
@@ -216,7 +228,21 @@ for i = 1:length(Session.conditions)
             
             % Foot limb kinematic chain
             % -------------------------------------------------------------
-                        
+            Condition(i).Trial(k).MultisegFoot = [];
+            if Session.Trial(j).kinematics.multisegFoot == 1
+                disp('      multi segmental foot');
+                % Set body segments for kinematics
+                [Segment,Vmarker,btk2] = ...
+                    setTrialSegment_kinematics_multisegFoot(Condition(i),Marker,btk2);
+                % Compute segment kinematics
+%                 [Segment,btk2] = computeSegmentKinematics_multisegFoot(Segment,btk2);
+                % Compute joint kinematics
+                [Joint,btk2] = computeJointKinematics_multisegFoot(Segment,btk2); 
+                % Store data in Condition (keep only intra cycle data)
+                Condition(i).Trial(k).MultisegFoot = ...
+                    exportCondition_multisegFoot(Condition(i).Trial(k).MultisegFoot,Segment,Joint,Marker,Vmarker,Event,fMarker);
+            end
+            
             % Export processed files
             % -------------------------------------------------------------
             cd(c3dFolder);
@@ -227,7 +253,7 @@ for i = 1:length(Session.conditions)
             % Merge files of a same condition
             % -------------------------------------------------------------
             cd(c3dFolder);
-            writeConditionC3d(Session,Condition(i),btk2,Session.Trial(j).filename,k);
+%             writeConditionC3d(Session,Condition(i),btk2,Session.Trial(j).filename,k);
             cd(toolboxFolder);
             k = k+1;
         end

@@ -117,9 +117,9 @@ else
     Session.markerSet.headTrunk = '';
 end
 if ~strcmp(temp1{35,5},'Aucun modèle')
-    Session.markerSet.foot = temp1{35,5};                                
+    Session.markerSet.multisegFoot = temp1{35,5};                                
 else
-    Session.markerSet.foot = '';
+    Session.markerSet.multisegFoot = '';
 end   
 Session.EMG{1} = temp1{36,4};                                              % EMG channels (please use 'side_name1_name2' format)
 Session.EMG{2} = temp1{37,4};                                              % if none, put 'none'
@@ -184,9 +184,9 @@ for i = index_static(1):index_static(end)
             Session.Static(j).kinematics.headTrunk = 0;
         end
         if strcmp(temp1{i,9},'X')                                          % The current record has been selected as a mfoot trial
-            Session.Static(j).kinematics.foot = 1;
+            Session.Static(j).kinematics.multisegFoot = 1;
         else
-            Session.Static(j).kinematics.foot = 0;
+            Session.Static(j).kinematics.multisegFoot = 0;
         end
         if strcmp(temp1{i,10},'X')                                         % The current record has been selected as a video trial
             Session.Static(j).video = 1;
@@ -229,9 +229,9 @@ for i = index_trial(1):index_trial(end)
             Session.Trial(j).kinematics.headTrunk = 0;
         end
         if strcmp(temp1{i,9},'X')                                          % The current record has been selected as a mfoot trial
-            Session.Trial(j).kinematics.foot = 1;
+            Session.Trial(j).kinematics.multisegFoot = 1;
         else
-            Session.Trial(j).kinematics.foot = 0;
+            Session.Trial(j).kinematics.multisegFoot = 0;
         end
         if strcmp(temp1{i,10},'X')                                         % The current record has been selected as a video trial
             Session.Trial(j).video = 1;
