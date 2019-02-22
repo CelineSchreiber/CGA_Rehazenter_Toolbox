@@ -124,6 +124,7 @@ for i = 1:length(Session.conditions)
                 disp('      Multi segmental foot');
                 % Set body segments
                 [Condition(i),btk2] = setStaticSegment_multisegFoot(Condition(i),Marker,btk2);
+                Condition(i) = computeOffsets(Condition(i),Marker);
             end  
             % Export processed files
             cd(c3dFolder);
@@ -237,7 +238,7 @@ for i = 1:length(Session.conditions)
                 % Compute segment kinematics
 %                 [Segment,btk2] = computeSegmentKinematics_multisegFoot(Segment,btk2);
                 % Compute joint kinematics
-                [Joint,btk2] = computeJointKinematics_multisegFoot(Segment,btk2); 
+                [Joint,btk2] = computeJointKinematics_multisegFoot(Condition,Segment,btk2); 
                 % Store data in Condition (keep only intra cycle data)
                 Condition(i).Trial(k).MultisegFoot = ...
                     exportCondition_multisegFoot(Condition(i).Trial(k).MultisegFoot,Segment,Joint,Marker,Vmarker,Event,fMarker);

@@ -55,7 +55,7 @@ end
 % Segment
 % -------------------------------------------------------------------------
 nSegment = fieldnames(Segment);
-for i = 1:5
+for i = 1:6
     for j = 1:size(nSegment,1)
         if size(Segment(i).(nSegment{j}),3) > 1
             temp = permute(Segment(i).(nSegment{j})(:,:,Event.RHS(1):Event.RHS(2)),[3,1,2]);
@@ -74,7 +74,7 @@ end
 % Joint
 % -------------------------------------------------------------------------
 nJoint = fieldnames(Joint);
-for i = 1:4
+for i = 1:5
     for j = 1:size(nJoint,1)
         if size(Joint(i).(nJoint{j}),3) > 1
             temp = permute(Joint(i).(nJoint{j})(:,:,Event.RHS(1):Event.RHS(2)),[3,1,2]);
@@ -126,7 +126,7 @@ end
 % Segment
 % -------------------------------------------------------------------------
 nSegment = fieldnames(Segment);
-for i = 101:105
+for i = 101:106
     for j = 1:size(nSegment,1)
         if size(Segment(i).(nSegment{j}),3) > 1
             temp = permute(Segment(i).(nSegment{j})(:,:,Event.LHS(1):Event.LHS(2)),[3,1,2]);
@@ -145,7 +145,7 @@ end
 % Joint
 % -------------------------------------------------------------------------
 nJoint = fieldnames(Joint);
-for i = 101:104
+for i = 101:105
     for j = 1:size(nJoint,1)
         if size(Joint(i).(nJoint{j}),3) > 1
             temp = permute(Joint(i).(nJoint{j})(:,:,Event.LHS(1):Event.LHS(2)),[3,1,2]);
