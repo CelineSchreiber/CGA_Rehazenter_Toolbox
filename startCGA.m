@@ -31,7 +31,7 @@ Condition = [];
 % =========================================================================
 disp('>> Import session information ...');
 [Patient,Pathology,Treatment,Examination,Session,Condition] = ...
-    importSessionInformation(Patient,Pathology,Treatment,Examination,Session,Condition,sessionFolder);
+    importSessionInformation(Patient,Pathology,Treatment,Examination,Session,Condition,patientFolder);
 disp(['  > Patient: ',Patient.lastname,' ',Patient.firstname,' ',Patient.birthdate]);
 disp(['  > Session: ',Session.date]);
 disp(' ');
@@ -40,7 +40,7 @@ disp(' ');
 % Import clinical examination
 % =========================================================================
 disp('>> Import clinical examination ...');
-Examination = importClinicalExamination(Examination,sessionFolder);
+Examination = importClinicalExamination(Examination,patientFolder);
 disp(['  > Patient: ',Patient.lastname,' ',Patient.firstname,' ',Patient.birthdate]);
 disp(['  > Session: ',Session.date]);
 disp(' ');
@@ -52,7 +52,7 @@ disp(' ');
 % .xlsx file (staticXX, videoXX, trialXX)
 % =========================================================================
 disp('>> Load session files ...');
-cd(sessionFolder);
+cd(patientFolder);
 % Load static file (.c3d) - 1 static per condition
 if isfield(Session,'Static')
     for i = 1:length(Session.Static)
@@ -190,7 +190,7 @@ for i = 1:length(Session.conditions)
             % Export processed files
             % -------------------------------------------------------------
             cd(sessionFolder);
-            btkWriteAcquisition(btk2,[strrep(Session.Trial(j).filename,'.c3d',''),'_out.c3d']);   
+%             btkWriteAcquisition(btk2,[strrep(Session.Trial(j).filename,'.c3d',''),'_out.c3d']);   
             clear btk2 Marker Vmarker Analog Event Forceplate tGrf Grf Segment Joint Spatiotemporal;
             cd(toolboxFolder);
             k = k+1;
@@ -200,11 +200,8 @@ for i = 1:length(Session.conditions)
     % Compute mean and std per item and per condition
     % Export data in a MAT file
     % ---------------------------------------------------------------------    
-    % Lower limb kinematic chain
-    if isfield(Condition(i).Trial(1),'LowerLimb')
-        Condition = computeAverage_lowerLimb(Condition,i);
-    end   
+    Condition = computeAverage_lowerLimb(Condition,i);
     exportMAT(Patient,Pathology,Treatment,Examination,Session,Condition,...
-              i,sessionFolder,toolboxFolder);
+              i,patientFolder,toolboxFolder);
     
 end

@@ -18,7 +18,7 @@ function [Patient,Pathology,Treatment,Examination,Session,Condition] = ...
 % =========================================================================
 cd(sessionFolder);
 xlsfile = dir('template.xls*');
-system('Taskkill /F /IM EXCEL.EXE');
+% system('Taskkill /F /IM EXCEL.EXE');
 Excel = actxserver('Excel.Application');
 fname = fullfile(pwd,xlsfile(1).name);
 if ~exist(fname,'file')
@@ -27,9 +27,9 @@ if ~exist(fname,'file')
     ExcelWorkbook.SaveAs(fname,1);
     ExcelWorkbook.Close(false);
 end
-% invoke(Excel.Workbooks,'Open',fname);
-Excel.Workbooks.Open(fname);
-[~,~,temp1] = xlsread1(Excel,xlsfile(1).name,1,'B2:L112');
+invoke(Excel.Workbooks,'Open',fname);
+
+[~,~,temp1] = xlsread1(Excel,xlsfile(1).name,1,'B2:K112');
 
 % =========================================================================
 % Get patient information
@@ -164,7 +164,7 @@ end
 j = 1;
 Session.Static = [];
 for i = index_static(1):index_static(end)
-    if ~isnan(temp1{i,11})                                                 % If the tracking column is empty, the file is not used
+    if ~isnan(temp1{i,4})                                                  % If no condition is defined, the file is not used
         Session.Static(j).filename = [temp1{i,1},'.c3d'];
         Session.Static(j).condition = temp1{i,4};
         if ~isnan(temp1{i,5})
