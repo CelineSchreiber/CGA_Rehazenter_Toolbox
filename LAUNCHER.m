@@ -15,7 +15,7 @@
 % Date of creation: 16/05/2018
 % Version: 1
 % =========================================================================
-tic
+
 % =========================================================================
 % Initialisation
 % =========================================================================
@@ -46,7 +46,7 @@ disp(' ');
 % =========================================================================
 % Set patient folder
 % =========================================================================
-sessionFolder = 'C:\Users\florent.moissenet\Documents\Professionnel\routines\github\CGA_Rehazenter_Toolbox\example\patient2';
+sessionFolder = 'C:\Users\florent.moissenet\Desktop\test\2014023';
 patientFolder = sessionFolder;
 
 % =========================================================================
@@ -57,31 +57,4 @@ startCGA(toolboxFolder,sessionFolder,patientFolder);
 % =========================================================================
 % Reporting tool
 % =========================================================================
-% Condition #1 (diagnosis condition - in case of multiple dates, the most recent exam)
-clearvars -except patientFolder sessionFolder toolboxFolder
-cd(patientFolder);
-load('Sadeler_Marc_26091985_N-Aa-NNN-NN_20122018.mat','-mat','Condition','Patient','Session');
-tempC(1) = Condition;
-tempS(1) = Session;
-
-% Condition #2 (other condition)
-clearvars -except tempC tempS Patient patientFolder sessionFolder toolboxFolder
-cd(patientFolder);
-load('Sadeler_Marc_26091985_N-N-NNSed-NN_20122018.mat','-mat','Condition','Session');
-tempC(2) = Condition;
-tempS(2) = Session;
-
-% Merge conditions
-clear Condition Session;
-Condition = tempC;
-Session = tempS;
-clear tempC tempS;
-        
-% Generate diagnostic XLS report
-for i = 1:length(Condition)
-    exportXLS_lowerLimb(Patient,Session,Condition,i,sessionFolder,toolboxFolder);
-end
-system(['rename template.xlsx ',Patient.lastname,'_',Patient.firstname,'_',regexprep(Patient.birthdate,'/',''),'_AQM_',regexprep(Session(1).date,'/',''),'.xlsx']);
-cd(toolboxFolder);
-
-toc
+startReport_lowerLimb(toolboxFolder,sessionFolder,patientFolder)
