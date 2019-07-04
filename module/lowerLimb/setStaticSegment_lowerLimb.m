@@ -75,12 +75,14 @@ rD5 = (Vmarker.R_HJC+Vmarker.L_HJC)/2;
 w5 = Z5;
 u5 = X5;
 Segment(5).Q = [u5;rP5;rD5;w5];
-Segment(5).rM = [Marker.R_IAS,Marker.L_IAS,Marker.R_IPS,Marker.L_IPS];
+Segment(5).rM = [Marker.R_Thigh1,Marker.R_Thigh2,Marker.R_Thigh3,Marker.R_Thigh4];
+Segment(6).rm = [Marker.Thorax1,Marker.Thorax2,Marker.Thorax3,Marker.Thorax4];
 % Save static information
 Condition.Static.LowerLimb.Vmarker.LJC = Vmarker.LJC;
 Condition.Static.LowerLimb.Vmarker.R_HJC = Vmarker.R_HJC;
 Condition.Static.LowerLimb.Vmarker.L_HJC = Vmarker.L_HJC;
 Condition.Static.LowerLimb.Segment(5).rM = Segment(5).rM;
+Condition.Static.LowerLimb.Segment(6).rM = Segment(6).rM;
 
 % =========================================================================
 % RIGHT FEMUR
@@ -204,9 +206,11 @@ rD105 = (Vmarker.R_HJC+Vmarker.L_HJC)/2;
 w105 = -Z105;
 u105 = X105;
 Segment(105).Q = [u105;rP105;rD105;w105];
-Segment(105).rM = [Marker.R_IAS,Marker.L_IAS,Marker.R_IPS,Marker.L_IPS];
+Segment(105).rM = [Marker.L_Thigh1,Marker.R_Lhigh2,Marker.L_Thigh3,Marker.L_Thigh4];
+Segment(106).rm = [Marker.Thorax1,Marker.Thorax2,Marker.Thorax3,Marker.Thorax4];
 % Save static information
 Condition.Static.LowerLimb.Segment(105).rM = Segment(105).rM;
+Condition.Static.LowerLimb.Segment(106).rM = Segment(106).rM;
 
 % =========================================================================
 % LEFT FEMUR

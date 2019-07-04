@@ -20,48 +20,51 @@ n = size(Marker.R_IAS,3);
 % RIGHT PELVIS
 % =========================================================================
 % Pelvis axes (Dumas and Wojtusch 2018)
-Z5 = Vnorm_array3(Marker.R_IAS-Marker.L_IAS);
-Y5 = Vnorm_array3(cross(Marker.R_IAS-(Marker.R_IPS+Marker.L_IPS)/2,...
-    Marker.L_IAS-(Marker.R_IPS+Marker.L_IPS)/2));
+Z5 = Vnorm_array3(Marker.R_CorsetA-Marker.L_CorsetA);
+Y5 = Vnorm_array3(cross(Marker.R_CorsetA-(Marker.R_CorsetP+Marker.L_CorsetP)/2,...
+    Marker.L_CorsetA-(Marker.R_CorsetP+Marker.L_CorsetP)/2));
 X5 = Vnorm_array3(cross(Y5,Z5));
-w_pelvis = mean(sqrt(sum((Marker.R_IAS-Marker.L_IAS).^2))); % pelvis width
+w_pelvis = mean(sqrt(sum((Marker.R_CorsetA-Marker.L_CorsetA).^2))); % pelvis width
 % Determination of the lumbar joint centre by regression (Dumas and Wojtusch 2018)
-if strcmp(Patient.gender,'Femme')
-    LJC(1) = -34.0/100;
-    LJC(2) = 4.9/100;
-    LJC(3) = 0.0/100;
-elseif strcmp(Patient.gender,'Homme')
-    LJC(1) = -33.5/100;
-    LJC(2) = -3.2/100;
-    LJC(3) = 0.0/100;
+
+Segment(6).rM = [Marker.Thorax1,Marker.Thorax2,Marker.Thorax3,Marker.Thorax4];
+% Knee joint centre
+% Reconstruction from Condition.Static.LowerLimb.Rstatic data by rigid body rotation & translation
+% Soederqvist and Wedin 1993 and Challis 1995
+Rotation = [];
+Translation = [];
+RMS = [];
+for i = 1:n
+    [Rotation(:,:,i),Translation(:,:,i),RMS(:,:,i)] ...
+        = soder(Condition.Static.LowerLimb.Segment(6).rM',Segment(6).rM(:,:,i)');
 end
-Vmarker.LJC = (Marker.R_IAS+Marker.L_IAS)/2 + ...
-    LJC(1)*w_pelvis*X5 + LJC(2)*w_pelvis*Y5 + LJC(3)*w_pelvis*Z5;
+Vmarker.LJC = ...
+    Mprod_array3(Rotation , repmat(Condition.Static.LowerLimb.Vmarker.R_LJC,[1 1 n])) ...
+    + Translation;
+Vmarker.LJC = Vmarker.LJC(1:3,:,:);
 % Export marker in C3D file
 temp = [Vmarker.LJC(1,:,:) -Vmarker.LJC(3,:,:) Vmarker.LJC(2,:,:)];
 btkSetPointNumber(btk2,btkGetPointNumber(btk2)+1);
 btkSetPoint(btk2,btkGetPointNumber(btk2),permute(temp,[3,2,1])*1e3);
 btkSetPointLabel(btk2,btkGetPointNumber(btk2),'LJC');
+
 % Determination of the hip joint centre by regression (Dumas and Wojtusch 2018)
-if strcmp(Patient.gender,'Femme')
-    R_HJC(1) = -13.9/100;
-    R_HJC(2) = -33.6/100;
-    R_HJC(3) = 37.2/100;
-    L_HJC(1) = -13.9/100;
-    L_HJC(2) = -33.6/100;
-    L_HJC(3) = -37.2/100;
-elseif strcmp(Patient.gender,'Homme')
-    R_HJC(1) = -9.5/100;
-    R_HJC(2) = -37.0/100;
-    R_HJC(3) = 36.1/100;
-    L_HJC(1) = -9.5/100;
-    L_HJC(2) = -37.0/100;
-    L_HJC(3) = -36.1/100;
+Segment(5).rM = [Marker.R_Thigh1,Marker.R_Thigh2,Marker.R_Thigh3,Marker.R_Thigh4];
+% Knee joint centre
+% Reconstruction from Condition.Static.LowerLimb.Rstatic data by rigid body rotation & translation
+% Soederqvist and Wedin 1993 and Challis 1995
+Rotation = [];
+Translation = [];
+RMS = [];
+for i = 1:n
+    [Rotation(:,:,i),Translation(:,:,i),RMS(:,:,i)] ...
+        = soder(Condition.Static.LowerLimb.Segment(5).rM',Segment(5).rM(:,:,i)');
 end
-Vmarker.R_HJC = (Marker.R_IAS+Marker.L_IAS)/2 + ...
-    R_HJC(1)*w_pelvis*X5 + R_HJC(2)*w_pelvis*Y5 + R_HJC(3)*w_pelvis*Z5;
-Vmarker.L_HJC = (Marker.R_IAS+Marker.L_IAS)/2 + ...
-    L_HJC(1)*w_pelvis*X5 + L_HJC(2)*w_pelvis*Y5 + L_HJC(3)*w_pelvis*Z5;
+Vmarker.R_HJC = ...
+    Mprod_array3(Rotation , repmat(Condition.Static.LowerLimb.Vmarker.R_LJC,[1 1 n])) ...
+    + Translation;
+Vmarker.R_HJC = Vmarker.R_HJC(1:3,:,:);
+Vmarker.L_HJC = Vmarker.R_HJC(1:3,:,:);
 % Export marker in C3D file
 temp = [Vmarker.R_HJC(1,:,:) -Vmarker.R_HJC(3,:,:) Vmarker.R_HJC(2,:,:)];
 btkSetPointNumber(btk2,btkGetPointNumber(btk2)+1);
@@ -78,7 +81,6 @@ rD5 = (Vmarker.R_HJC+Vmarker.L_HJC)/2;
 w5 = Z5;
 u5 = X5;
 Segment(5).Q = [u5;rP5;rD5;w5];
-Segment(5).rM = [Marker.R_IAS,Marker.L_IAS,Marker.R_IPS,Marker.L_IPS];
 
 % =========================================================================
 % RIGHT FEMUR
@@ -196,43 +198,30 @@ Segment(1).Q = [u1;rP1;rD1;w1];
 % LEFT PELVIS
 % =========================================================================
 % Pelvis axes (Dumas and Wojtusch 2018)
-Z105 = Vnorm_array3(Marker.R_IAS-Marker.L_IAS);
-Y105 = Vnorm_array3(cross(Marker.R_IAS-(Marker.R_IPS+Marker.L_IPS)/2,...
-    Marker.L_IAS-(Marker.R_IPS+Marker.L_IPS)/2));
+Z105 = Vnorm_array3(Marker.R_CorsetA-Marker.L_CorsetA);
+Y105 = Vnorm_array3(cross(Marker.R_CorsetA-(Marker.R_CorsetP+Marker.L_CorsetP)/2,...
+    Marker.L_IAS-(Marker.R_CorsetP+Marker.L_CorsetP)/2));
 X105 = Vnorm_array3(cross(Y105,Z105));
-w_pelvis = mean(sqrt(sum((Marker.R_IAS-Marker.L_IAS).^2))); % pelvis width
-% Determination of the lumbar joint centre by regression (Dumas and Wojtusch 2018)
-if strcmp(Patient.gender,'Femme')
-    LJC(1) = -34.0/100;
-    LJC(2) = 4.9/100;
-    LJC(3) = 0.0/100;
-elseif strcmp(Patient.gender,'Homme')
-    LJC(1) = -33.5/100;
-    LJC(2) = -3.2/100;
-    LJC(3) = 0.0/100;
-end
-Vmarker.LJC = (Marker.R_IAS+Marker.L_IAS)/2 + ...
-    LJC(1)*w_pelvis*X5 + LJC(2)*w_pelvis*Y5 + LJC(3)*w_pelvis*Z5;
+w_pelvis = mean(sqrt(sum((Marker.R_CorsetA-Marker.L_CorsetA).^2))); % pelvis width
+
 % Determination of the hip joint centre by regression (Dumas and Wojtusch 2018)
-if strcmp(Patient.gender,'Femme')
-    R_HJC(1) = -13.9/100;
-    R_HJC(2) = -33.6/100;
-    R_HJC(3) = 37.2/100;
-    L_HJC(1) = -13.9/100;
-    L_HJC(2) = -33.6/100;
-    L_HJC(3) = -37.2/100;
-elseif strcmp(Patient.gender,'Homme')
-    R_HJC(1) = -9.5/100;
-    R_HJC(2) = -37.0/100;
-    R_HJC(3) = 36.1/100;
-    L_HJC(1) = -9.5/100;
-    L_HJC(2) = -37.0/100;
-    L_HJC(3) = -36.1/100;
+Segment(105).rM = [Marker.L_Thigh1,Marker.L_Thigh2,Marker.L_Thigh3,Marker.L_Thigh4];
+% Knee joint centre
+% Reconstruction from Condition.Static.LowerLimb.Rstatic data by rigid body rotation & translation
+% Soederqvist and Wedin 1993 and Challis 1995
+Rotation = [];
+Translation = [];
+RMS = [];
+for i = 1:n
+    [Rotation(:,:,i),Translation(:,:,i),RMS(:,:,i)] ...
+        = soder(Condition.Static.LowerLimb.Segment(105).rM',Segment(105).rM(:,:,i)');
 end
-Vmarker.R_HJC = (Marker.R_IAS+Marker.L_IAS)/2 + ...
-    R_HJC(1)*w_pelvis*X5 + R_HJC(2)*w_pelvis*Y5 + R_HJC(3)*w_pelvis*Z5;
-Vmarker.L_HJC = (Marker.R_IAS+Marker.L_IAS)/2 + ...
-    L_HJC(1)*w_pelvis*X5 + L_HJC(2)*w_pelvis*Y5 + L_HJC(3)*w_pelvis*Z5;
+Vmarker.R_HJC = ...
+    Mprod_array3(Rotation , repmat(Condition.Static.LowerLimb.Vmarker.R_LJC,[1 1 n])) ...
+    + Translation;
+Vmarker.R_HJC = Vmarker.R_HJC(1:3,:,:);
+Vmarker.L_HJC = Vmarker.R_HJC(1:3,:,:);
+
 % Pelvis parameters (Dumas and Chèze 2007)
 rP105 = Vmarker.LJC;
 rD105 = (Vmarker.R_HJC+Vmarker.L_HJC)/2;
