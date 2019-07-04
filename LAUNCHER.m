@@ -46,7 +46,7 @@ disp(' ');
 % =========================================================================
 % Set patient folder
 % =========================================================================
-sessionFolder = 'C:\Users\florent.moissenet\Desktop\test\2014023';
+sessionFolder = 'C:\Users\celine.schreiber\Documents\MATLAB\CGA_Rehazenter_Toolbox\example\Camille';
 patientFolder = sessionFolder;
 
 % =========================================================================

@@ -169,7 +169,7 @@ for i = 1:length(Session.conditions)
                 % Compute segment kinematics
                 [Segment,btk2] = computeSegmentKinematics_lowerLimb(Segment,btk2);
                 % Set body segments and joints for kinetics
-                [Segment,Joint,Vmarker] = ...
+                [Segment,Joint] = ...
                     setTrialSegment_kinetics_lowerLimb(Session,Patient,Condition(i),Segment,Joint,Marker,Event,Forceplate,tGrf,Grf,trial,btk2,Session.Trial(j).s,fMarker);
                 % Compute kinetics
                 [Segment,Joint,btk2] = computeJointKinetics_lowerLimb(Session,Segment,Joint,fMarker,btk2);
