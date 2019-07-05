@@ -146,7 +146,8 @@ for i = 1:length(Session.conditions)
             % Import markers 3D trajectories
             [Marker,btk2] = importTrialMarker(Marker,Event,n0,fMarker,fAnalog);
             % Import reaction forces
-            [Grf,tGrf] = importTrialReaction(Event,Forceplate,tGrf,Grf,btk2,n0,n,fMarker,fAnalog);
+%             [Grf,tGrf] = importTrialReaction(Event,Forceplate,tGrf,Grf,btk2,n0,n,fMarker,fAnalog);
+            [Grf,tGrf] = importTrialTapis(Analog,Event,btk2,n0,n,fMarker,fAnalog);
             % Import EMG signals
             [EMG,btk2] = importTrialEMG(Session,Analog,Event,btk2,n0,n,fMarker,fAnalog);
             % Update and export events
