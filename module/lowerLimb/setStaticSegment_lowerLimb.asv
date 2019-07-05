@@ -104,7 +104,7 @@ rD4 = Vmarker.R_KJC;
 w4 = Vnorm_array3(Marker.R_FLE-Marker.R_FME);%Z4;
 u4 = X4;
 Segment(4).Q = [u4;rP4;rD4;w4];
-Segment(4).rM = [Marker.R_Thigh1,Marker.R_FLE,Vmarker.R_HJC];
+Segment(4).rM = [Marker.R_FTC,Marker.R_FLE,Vmarker.R_HJC];
 % Save static information
 Condition.Static.LowerLimb.Vmarker.R_KJC = Vmarker.R_KJC;
 Condition.Static.LowerLimb.Segment(4).rM = Segment(4).rM;
@@ -189,7 +189,7 @@ rD104 = Vmarker.L_KJC;
 w104 = Vnorm_array3(Marker.L_FLE-Marker.L_FME);%Z4;
 u104 = -X104;
 Segment(104).Q = [u104;rP104;rD104;w104];
-Segment(104).rM = [Marker.L_Thigh1,Marker.L_FLE,Vmarker.L_HJC];
+Segment(104).rM = [Marker.L_FTC,Marker.L_FLE,Vmarker.L_HJC];
 % Save static information
 Condition.Static.LowerLimb.Vmarker.L_KJC = Vmarker.L_KJC;
 Condition.Static.LowerLimb.Segment(104).rM = Segment(104).rM;

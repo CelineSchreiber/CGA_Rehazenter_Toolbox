@@ -117,8 +117,13 @@ btkSetPointDescription(btk2,btkGetPointNumber(btk2),'Angle (Deg): X-Axis: F(+)/E
 % LEFT HIP
 % =========================================================================
 Joint(104).FE = Joint(104).Euler(1,1,:)*180/pi;
-Joint(104).AA = Joint(104).Euler(1,2,:)*180/pi;
-Joint(104).IER = Joint(104).Euler(1,3,:)*180/pi;
+Joint(104).AA = -Joint(104).Euler(1,2,:)*180/pi;
+% Joint(104).IER = Joint(104).Euler(1,3,:)*180/pi-180;
+if max(abs(Joint(104).Euler(1,3,:)*180/pi)) > 150
+    Joint(104).IER = mod(Joint(104).Euler(1,3,:),2*pi)*180/pi-180;
+else
+    Joint(104).IER = Joint(104).Euler(1,3,:)*180/pi-180;
+end
 Joint(104).LM = Joint(104).dj(1,1,:);
 Joint(104).AP = Joint(104).dj(2,1,:);
 Joint(104).PD = Joint(104).dj(1,1,:);
