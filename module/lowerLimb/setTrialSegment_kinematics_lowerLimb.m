@@ -19,11 +19,6 @@ n = size(Marker.R_CorsetA,3);
 % =========================================================================
 % RIGHT PELVIS
 % =========================================================================
-% Pelvis axes (Dumas and Wojtusch 2018)
-Z5 = Vnorm_array3(Marker.R_CorsetA-Marker.L_CorsetA);
-Y5 = Vnorm_array3(cross(Marker.R_CorsetA-(Marker.R_CorsetP+Marker.L_CorsetP)/2,...
-    Marker.L_CorsetA-(Marker.R_CorsetP+Marker.L_CorsetP)/2));
-X5 = Vnorm_array3(cross(Y5,Z5));
 
 % Determination of the lumbar joint centre
 Segment(6).rM = [Marker.Thorax1,Marker.Thorax2,Marker.Thorax3,Marker.Thorax4];
@@ -46,6 +41,23 @@ btkSetPointNumber(btk2,btkGetPointNumber(btk2)+1);
 btkSetPoint(btk2,btkGetPointNumber(btk2),permute(temp,[3,2,1])*1e3);
 btkSetPointLabel(btk2,btkGetPointNumber(btk2),'LJC');
 
+% =========================================================================
+% CORSET
+% =========================================================================
+Z6 = Vnorm_array3(Marker.R_CorsetA-Marker.L_CorsetA);
+Y6 = Vnorm_array3(cross(Marker.R_CorsetA-(Marker.R_CorsetP+Marker.L_CorsetP)/2,...
+    Marker.L_CorsetA-(Marker.R_CorsetP+Marker.L_CorsetP)/2));
+X6 = Vnorm_array3(cross(Y5,Z5));
+
+rP6 = Vmarker.LJC;
+rD6 = (Vmarker.R_CorsetA+Vmarker.L_CorsetA)/2;
+w6 = Z6;
+u6 = X6;
+Segment(6).Q = [u6;rP6;rD6;w6];
+
+% =========================================================================
+% RIGHT HIP
+% =========================================================================
 % Determination of the hip joint
 Segment(5).rM = [Marker.R_Thigh1,Marker.R_Thigh2,Marker.R_Thigh3,Marker.R_Thigh4];
 % Reconstruction from Condition.Static.LowerLimb.Rstatic data by rigid body rotation & translation
@@ -90,6 +102,18 @@ btkSetPoint(btk2,btkGetPointNumber(btk2),permute(temp,[3,2,1])*1e3);
 btkSetPointLabel(btk2,btkGetPointNumber(btk2),'L_HJC');
 
 % Pelvis parameters (Dumas and Chèze 2007)
+% Pelvis axes (Dumas and Wojtusch 2018)
+Ht_HJC = (mean(Vmarker.R_HJC(2,:,:)) + mean(Vmarker.L_HJC(2,:,:)))/2;
+Vmarker.R_CorsetP = Marker.R_CorsetP;
+Vmarker.R_CorsetP(2,:,:) = Vmarker.R_CorsetP(2,:,:) - Ht_HJC;
+Vmarker.L_CorsetP = Marker.L_CorsetP;
+Vmarker.L_CorsetP(2,:,:) = Vmarker.L_CorsetP(2,:,:) - Ht_HJC;
+
+Z5 = Vnorm_array3(Vmarker.R_HJC-Vmarker.L_HJC);
+Y5 = Vnorm_array3(cross(Vmarker.R_HJC-(Vmarker.R_CorsetP+Vmarker.L_CorsetP)/2,...
+    Vmarker.L_HJC-(Vmarker.R_CorsetP+Vmarker.L_CorsetP)/2));
+X5 = Vnorm_array3(cross(Y5,Z5));
+
 rP5 = Vmarker.LJC;
 rD5 = (Vmarker.R_HJC+Vmarker.L_HJC)/2;
 w5 = Z5;
@@ -212,7 +236,7 @@ Segment(1).Q = [u1;rP1;rD1;w1];
 % LEFT PELVIS
 % =========================================================================
 % Pelvis axes (Dumas and Wojtusch 2018)
-Segment(105).Q = [u5;rP5;rD5;w5];
+Segment(105).Q = [u5;rP5;rD5;-w5];
 
 % =========================================================================
 % LEFT FEMUR
