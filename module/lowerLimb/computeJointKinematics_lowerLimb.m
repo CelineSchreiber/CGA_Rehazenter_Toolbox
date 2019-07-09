@@ -41,7 +41,7 @@ btkSetPointDescription(btk2,btkGetPointNumber(btk2),'Angle (Deg): X-Axis: DF(+)/
 % RIGHT KNEE
 % =========================================================================
 Joint(3).FE = Joint(3).Euler(1,1,:)*180/pi;
-Joint(3).AA = Joint(3).Euler(1,2,:)*180/pi;
+Joint(3).AA = -Joint(3).Euler(1,2,:)*180/pi;
 Joint(3).IER = Joint(3).Euler(1,3,:)*180/pi;
 Joint(3).LM = Joint(3).dj(1,1,:);
 Joint(3).AP = Joint(3).dj(2,1,:);
@@ -61,9 +61,9 @@ btkSetPointDescription(btk2,btkGetPointNumber(btk2),'Angle (Deg): X-Axis: F(+)/E
 Joint(4).FE = 90+Joint(4).Euler(1,1,:)*180/pi;
 Joint(4).AA = Joint(4).Euler(1,2,:)*180/pi;
 if max(abs(Joint(4).Euler(1,3,:)*180/pi)) > 150
-    Joint(4).IER = mod(Joint(4).Euler(1,3,:),2*pi)*180/pi-180;
+    Joint(4).IER = -mod(Joint(4).Euler(1,3,:),2*pi)*180/pi-180;
 else
-    Joint(4).IER = Joint(4).Euler(1,3,:)*180/pi;
+    Joint(4).IER = -Joint(4).Euler(1,3,:)*180/pi;
 end
 Joint(4).LM = Joint(4).dj(1,1,:);
 Joint(4).AP = Joint(4).dj(2,1,:);
@@ -103,7 +103,7 @@ btkSetPointDescription(btk2,btkGetPointNumber(btk2),'Angle (Deg): X-Axis: DF(+)/
 % LEFT KNEE
 % =========================================================================
 Joint(103).FE = Joint(103).Euler(1,1,:)*180/pi;
-Joint(103).AA = Joint(103).Euler(1,2,:)*180/pi;
+Joint(103).AA = -Joint(103).Euler(1,2,:)*180/pi;
 Joint(103).IER = Joint(103).Euler(1,3,:)*180/pi;
 Joint(103).LM = Joint(103).dj(1,1,:);
 Joint(103).AP = Joint(103).dj(2,1,:);
@@ -124,9 +124,9 @@ Joint(104).FE = 90+Joint(104).Euler(1,1,:)*180/pi;
 Joint(104).AA = Joint(104).Euler(1,2,:)*180/pi;
 % Joint(104).IER = Joint(104).Euler(1,3,:)*180/pi-180;
 if max(abs(Joint(104).Euler(1,3,:)*180/pi)) > 150
-    Joint(104).IER = mod(Joint(104).Euler(1,3,:),2*pi)*180/pi-180;
+    Joint(104).IER = -mod(Joint(104).Euler(1,3,:),2*pi)*180/pi-180;
 else
-    Joint(104).IER = Joint(104).Euler(1,3,:)*180/pi;
+    Joint(104).IER = -Joint(104).Euler(1,3,:)*180/pi;
 end
 Joint(104).LM = Joint(104).dj(1,1,:);
 Joint(104).AP = Joint(104).dj(2,1,:);

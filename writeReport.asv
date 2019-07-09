@@ -20,18 +20,18 @@ norm = load('Normes spontanee.mat');
 
 % NORMATIVE DATA MEAN
 % Pelvis kinematics
-xlswrite(File,norm.Normatives.Lkinematics.Ptilt.mean,'Examen - norm (2)','B6:B106'); 
-xlswrite(File,norm.Normatives.Lkinematics.Ptilt.std,'Examen - norm (2)','C6:C106'); 
-xlswrite(File,norm.Normatives.Rkinematics.Ptilt.mean,'Examen - norm (2)','D6:D106'); 
-xlswrite(File,norm.Normatives.Rkinematics.Ptilt.std,'Examen - norm (2)','E6:E106');
-xlswrite(File,norm.Normatives.Lkinematics.Pobli.mean,'Examen - norm (2)','F6:F106');
-xlswrite(File,norm.Normatives.Lkinematics.Pobli.mean,'Examen - norm (2)','G6:G106');
-xlswrite(File,norm.Normatives.Rkinematics.Pobli.mean,'Examen - norm (2)','H6:H106'); 
-xlswrite(File,norm.Normatives.Rkinematics.Pobli.mean,'Examen - norm (2)','I6:I106'); 
-xlswrite(File,norm.Normatives.Lkinematics.Prota.mean,'Examen - norm (2)','J6:J106');
-xlswrite(File,norm.Normatives.Lkinematics.Prota.mean,'Examen - norm (2)','K6:K106');
-xlswrite(File,norm.Normatives.Rkinematics.Prota.mean,'Examen - norm (2)','L6:L106'); 
-xlswrite(File,norm.Normatives.Rkinematics.Prota.mean,'Examen - norm (2)','M6:M106'); 
+xlswrite(File,norm.Normatives.Segmentkinematics.L_Pelvis_angle_FE.mean,'Examen - norm (2)','B6:B106'); 
+xlswrite(File,norm.Normatives.Segmentkinematics.L_Pelvis_angle_FE.std,'Examen - norm (2)','C6:C106'); 
+xlswrite(File,norm.Normatives.Segmentkinematics.R_Pelvis_angle_FE.mean,'Examen - norm (2)','D6:D106'); 
+xlswrite(File,norm.Normatives.Segmentkinematics.L_Pelvis_angle_FE.std,'Examen - norm (2)','E6:E106');
+xlswrite(File,norm.Normatives.Segmentkinematics.L_Pelvis_angle_AA.mean,'Examen - norm (2)','F6:F106');
+xlswrite(File,norm.Normatives.Segmentkinematics.L_Pelvis_angle_AA.mean,'Examen - norm (2)','G6:G106');
+xlswrite(File,norm.Normatives.Segmentkinematics.L_Pelvis_angle_AA.mean,'Examen - norm (2)','H6:H106'); 
+xlswrite(File,norm.Normatives.Segmentkinematics.L_Pelvis_angle_AA.mean,'Examen - norm (2)','I6:I106'); 
+xlswrite(File,norm.Normatives.Segmentkinematics.L_Pelvis_angle_IER.mean,'Examen - norm (2)','J6:J106');
+xlswrite(File,norm.Normatives.Segmentkinematics.L_Pelvis_angle_IER.mean,'Examen - norm (2)','K6:K106');
+xlswrite(File,norm.Normatives.Segmentkinematics.L_Pelvis_angle_IER.mean,'Examen - norm (2)','L6:L106'); 
+xlswrite(File,norm.Normatives.Segmentkinematics.L_Pelvis_angle_IER.mean,'Examen - norm (2)','M6:M106'); 
 
 % Hip kinematics
 xlswrite(File,norm.Normatives.Lkinematics.FE4.mean,'Examen - norm (2)','N6:N106'); 
@@ -62,60 +62,32 @@ xlswrite(File,norm.Normatives.Rkinematics.IER3.mean,'Examen - norm (2)','AJ6:AJ1
 xlswrite(File,norm.Normatives.Rkinematics.IER3.mean,'Examen - norm (2)','AK6:AK106');
 
 % Ankle kinematics
-xlswrite(File,norm.Normatives.Lkinematics.FE3.mean,'Examen - norm (2)','Z6:Z106'); 
-xlswrite(File,norm.Normatives.Lkinematics.FE3.std,'Examen - norm (2)','AA6:AA106'); 
-xlswrite(File,norm.Normatives.Rkinematics.FE3.mean,'Examen - norm (2)','AB6:AB106'); 
-xlswrite(File,norm.Normatives.Rkinematics.FE3.std,'Examen - norm (2)','AC6:AC106'); 
-xlswrite(File,norm.Normatives.Lkinematics.AA3.mean,'Examen - norm (2)','AD6:AD106'); 
-xlswrite(File,norm.Normatives.Lkinematics.AA3.mean,'Examen - norm (2)','AE6:AE106');
-xlswrite(File,norm.Normatives.Rkinematics.AA3.mean,'Examen - norm (2)','AF6:AF106');
-xlswrite(File,norm.Normatives.Rkinematics.AA3.mean,'Examen - norm (2)','AG6:AG106');
-xlswrite(File,norm.Normatives.Lkinematics.IER3.mean,'Examen - norm (2)','AH6:AH106');
-xlswrite(File,norm.Normatives.Lkinematics.IER3.mean,'Examen - norm (2)','AI6:AI106');
-xlswrite(File,norm.Normatives.Rkinematics.IER3.mean,'Examen - norm (2)','AJ6:AJ106');
-xlswrite(File,norm.Normatives.Rkinematics.IER3.mean,'Examen - norm (2)','AK6:AK106');
-% Foot kinematics
-xlswrite1(File,norm.Normatives.Kinematics.Ftilt.mean,'Examen - norm (1)','X4:X104'); % left
-xlswrite1(File,norm.Normatives.Kinematics.Ftilt.mean,'Examen - norm (1)','Y4:Y104'); % right
-xlswrite1(File,norm.Normatives.Kinematics.Fobli.mean,'Examen - norm (1)','Z4:Z104'); % ...
-xlswrite1(File,norm.Normatives.Kinematics.Fobli.mean,'Examen - norm (1)','AA4:AA104');
-xlswrite1(File,norm.Normatives.Kinematics.Frota.mean,'Examen - norm (1)','AB4:AB104');
-xlswrite1(File,norm.Normatives.Kinematics.Frota.mean,'Examen - norm (1)','AC4:AC104');
+xlswrite(File,norm.Normatives.Lkinematics.FE2.mean,'Examen - norm (2)','AL6:AL106'); 
+xlswrite(File,norm.Normatives.Lkinematics.FE2.std,'Examen - norm (2)','AM6:AM106'); 
+xlswrite(File,norm.Normatives.Rkinematics.FE2.mean,'Examen - norm (2)','AN6:AN106'); 
+xlswrite(File,norm.Normatives.Rkinematics.FE2.std,'Examen - norm (2)','AO6:AO106'); 
+xlswrite(File,norm.Normatives.Lkinematics.AA2.mean,'Examen - norm (2)','AP6:AP106'); 
+xlswrite(File,norm.Normatives.Lkinematics.AA2.mean,'Examen - norm (2)','AQ6:AQ106');
+xlswrite(File,norm.Normatives.Rkinematics.AA2.mean,'Examen - norm (2)','AR6:AR106');
+xlswrite(File,norm.Normatives.Rkinematics.AA2.mean,'Examen - norm (2)','AS6:AS106');
+xlswrite(File,norm.Normatives.Lkinematics.IER2.mean,'Examen - norm (2)','AT6:AT106');
+xlswrite(File,norm.Normatives.Lkinematics.IER2.mean,'Examen - norm (2)','AU6:AU106');
+xlswrite(File,norm.Normatives.Rkinematics.IER2.mean,'Examen - norm (2)','AV6:AV106');
+xlswrite(File,norm.Normatives.Rkinematics.IER2.mean,'Examen - norm (2)','AW6:AW106');
 
-% NORMATIVE DATA STD
-% Pelvis kinematics
-xlswrite1(File,norm.Normatives.Kinematics.Ptilt.std,'Examen - norm (1)','B109:B209'); % left
-xlswrite1(File,norm.Normatives.Kinematics.Ptilt.std,'Examen - norm (1)','C109:C209'); % right
-xlswrite1(File,norm.Normatives.Kinematics.Pobli.std,'Examen - norm (1)','D109:D209'); % ...
-xlswrite1(File,norm.Normatives.Kinematics.Pobli.std,'Examen - norm (1)','E109:E209');
-xlswrite1(File,norm.Normatives.Kinematics.Prota.std,'Examen - norm (1)','F109:F209');
-xlswrite1(File,norm.Normatives.Kinematics.Prota.std,'Examen - norm (1)','G109:G209');
-% Hip kinematics
-xlswrite1(File,norm.Normatives.Kinematics.FE4.std,'Examen - norm (1)','H109:H209'); % left
-xlswrite1(File,norm.Normatives.Kinematics.FE4.std,'Examen - norm (1)','I109:I209'); % right
-xlswrite1(File,norm.Normatives.Kinematics.AA4.std,'Examen - norm (1)','J109:J209'); % ...
-xlswrite1(File,norm.Normatives.Kinematics.AA4.std,'Examen - norm (1)','K109:K209');
-xlswrite1(File,norm.Normatives.Kinematics.IER4.std,'Examen - norm (1)','L109:L209');
-xlswrite1(File,norm.Normatives.Kinematics.IER4.std,'Examen - norm (1)','M109:M209');
-% Knee kinematics
-xlswrite1(File,norm.Normatives.Kinematics.FE3.std,'Examen - norm (1)','N109:N209'); % left
-xlswrite1(File,norm.Normatives.Kinematics.FE3.std,'Examen - norm (1)','O109:O209'); % right
-xlswrite1(File,norm.Normatives.Kinematics.AA3.std,'Examen - norm (1)','P109:P209'); % ...
-xlswrite1(File,norm.Normatives.Kinematics.AA3.std,'Examen - norm (1)','Q109:Q209');
-xlswrite1(File,norm.Normatives.Kinematics.IER3.std,'Examen - norm (1)','R109:R209');
-xlswrite1(File,norm.Normatives.Kinematics.IER3.std,'Examen - norm (1)','S109:S209');
-% Ankle kinematics
-xlswrite1(File,norm.Normatives.Kinematics.FE2.std,'Examen - norm (1)','T109:T209'); % left
-xlswrite1(File,norm.Normatives.Kinematics.FE2.std,'Examen - norm (1)','U109:U209'); % right
-xlswrite1(File,norm.Normatives.Kinematics.AA2.std,'Examen - norm (1)','V109:V209'); % ...
-xlswrite1(File,norm.Normatives.Kinematics.AA2.std,'Examen - norm (1)','W109:W209');
 % Foot kinematics
-xlswrite1(File,norm.Normatives.Kinematics.Ftilt.std,'Examen - norm (1)','X109:X209'); % left
-xlswrite1(File,norm.Normatives.Kinematics.Ftilt.std,'Examen - norm (1)','Y109:Y209'); % right
-xlswrite1(File,norm.Normatives.Kinematics.Fobli.std,'Examen - norm (1)','Z109:Z209'); % ...
-xlswrite1(File,norm.Normatives.Kinematics.Fobli.std,'Examen - norm (1)','AA109:AA209');
-xlswrite1(File,norm.Normatives.Kinematics.Frota.std,'Examen - norm (1)','AB109:AB209');
-xlswrite1(File,norm.Normatives.Kinematics.Frota.std,'Examen - norm (1)','AC109:AC209');
+xlswrite(File,norm.Normatives.Segmentkinematics.Ftilt.mean,'Examen - norm (2)','AX6:AX106'); 
+xlswrite(File,norm.Normatives.Segmentkinematics.Ftilt.std,'Examen - norm (2)','AY6:AY106'); 
+xlswrite(File,norm.Normatives.Segmentkinematics.Ftilt.mean,'Examen - norm (2)','AZ6:AZ106'); 
+xlswrite(File,norm.Normatives.Segmentkinematics.Ftilt.std,'Examen - norm (2)','BA6:BA106'); 
+xlswrite(File,norm.Normatives.Segmentkinematics.Fobli.mean,'Examen - norm (2)','BB6:BB106'); 
+xlswrite(File,norm.Normatives.Segmentkinematics.Fobli.mean,'Examen - norm (2)','BC6:BC106');
+xlswrite(File,norm.Normatives.Segmentkinematics.Fobli.mean,'Examen - norm (2)','BD6:BD106');
+xlswrite(File,norm.Normatives.Segmentkinematics.Fobli.mean,'Examen - norm (2)','BE6:BE106');
+xlswrite(File,norm.Normatives.Segmentkinematics.Frota.mean,'Examen - norm (2)','BF6:BF106');
+xlswrite(File,norm.Normatives.Segmentkinematics.Frota.mean,'Examen - norm (2)','BG6:BG106');
+xlswrite(File,norm.Normatives.Segmentkinematics.Frota.mean,'Examen - norm (2)','BH6:BH106');
+xlswrite(File,norm.Normatives.Segmentkinematics.Frota.mean,'Examen - norm (2)','BI6:BI106');
 
 invoke(Excel.ActiveWorkbook,'Save');
 Excel.Quit
