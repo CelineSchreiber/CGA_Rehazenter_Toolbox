@@ -47,10 +47,10 @@ btkSetPointLabel(btk2,btkGetPointNumber(btk2),'LJC');
 Z6 = Vnorm_array3(Marker.R_CorsetA-Marker.L_CorsetA);
 Y6 = Vnorm_array3(cross(Marker.R_CorsetA-(Marker.R_CorsetP+Marker.L_CorsetP)/2,...
     Marker.L_CorsetA-(Marker.R_CorsetP+Marker.L_CorsetP)/2));
-X6 = Vnorm_array3(cross(Y5,Z5));
+X6 = Vnorm_array3(cross(Y6,Z6));
 
 rP6 = Vmarker.LJC;
-rD6 = (Vmarker.R_CorsetA+Vmarker.L_CorsetA)/2;
+rD6 = (Marker.R_CorsetA+Marker.L_CorsetA)/2;
 w6 = Z6;
 u6 = X6;
 Segment(6).Q = [u6;rP6;rD6;w6];
