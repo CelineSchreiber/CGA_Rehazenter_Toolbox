@@ -35,8 +35,8 @@ disp(' ');
 % Set toolbox folders
 % =========================================================================
 disp('Initialisation ...');
-toolboxFolder = 'C:\Users\florent.moissenet\Documents\Professionnel\routines\github\CGA_Rehazenter_Toolbox';
-normativeFile = 'C:\Users\florent.moissenet\Documents\Professionnel\routines\github\CGA_Rehazenter_Toolbox\norm\Normes spontanee.mat';
+toolboxFolder = 'C:\Users\celine.schreiber\Documents\MATLAB\CGA_Rehazenter_Toolbox';
+normativeFile = 'C:\Users\celine.schreiber\Documents\MATLAB\CGA_Rehazenter_Toolbox\norm\Normes spontanee.mat';
 reportFolder = 'X:\Reports';
 addpath(toolboxFolder);
 addpath(genpath([toolboxFolder,'\module']));
@@ -46,7 +46,7 @@ disp(' ');
 % =========================================================================
 % Set patient folder
 % =========================================================================
-sessionFolder = 'C:\Users\florent.moissenet\Documents\Professionnel\routines\github\CGA_Rehazenter_Toolbox\example';
+sessionFolder = 'C:\Users\celine.schreiber\Documents\MATLAB\CGA_Rehazenter_Toolbox\example\patient2';
 patientFolder = sessionFolder;
 
 % =========================================================================
@@ -55,6 +55,11 @@ patientFolder = sessionFolder;
 startCGA(toolboxFolder,sessionFolder,patientFolder);
 
 % =========================================================================
-% Reporting tool
+% Matlab Reporting tool
+% =========================================================================
+startClinicalReport_lowerLimb()
+
+% =========================================================================
+% Excel Reporting tool
 % =========================================================================
 startReport_lowerLimb(toolboxFolder,sessionFolder,patientFolder)
