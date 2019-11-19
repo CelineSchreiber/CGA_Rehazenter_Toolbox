@@ -1,0 +1,11 @@
+pageWidth = 21; % cm
+pageHeight = 29.7; % cm
+graphWidth = 5.0; % cm
+graphHeight = 2.3; % cm
+yinit = 29.0; % cm
+yincr = 0.5; % cm
+x = [1.50 8.00 14.50]; % cm
+igraph = 1; % graph number
+colorR = [0 0.8 0;0 0.8 0.8;0 0.4 0;0 0.4 0.4;0 0.2 0;0 0.2 0.2];
+colorL = [0.8 0 0;0.8 0 0.8;0.4 0 0;0.4 0 0.4;0.2 0 0;0.2 0 0.2];
+colorB = [0 0 0.8;0.2 0.2 0.8;0.5 0.5 0.8;0.7 0.7 0.8;0.9 0.9 0.8;0.9 0.9 0.6];

@@ -13,13 +13,16 @@
 
 function [Segment,Joint,btk2] = computeJointKinetics_lowerLimb(Session,Segment,Joint,f,btk2)
 
+g=9.81;
+
 % =========================================================================
 % Inverse dynamics
 % =========================================================================
 [Segment,Joint] = Joint_Kinetics_2legs(Segment,Joint,f);
 
 % =========================================================================
-% Export moment (normalised by weight) in C3D file
+% Export moment (normalised by weight) in C3D file => A normaliser par
+% (m0*g*l0)???
 % =========================================================================
 % Right ankle
 btkSetPointNumber(btk2,btkGetPointNumber(btk2)+1);
@@ -128,7 +131,8 @@ for j = 1:n
 end
 
 % =========================================================================
-% Export power (normalised by weight) in C3D file
+% Export power (normalised by weight) in C3D file  => A normaliser par
+% (m0*g^(1/2)*l0^(3.2))???
 % =========================================================================
 % Right ankle
 btkSetPointNumber(btk2,btkGetPointNumber(btk2)+1);

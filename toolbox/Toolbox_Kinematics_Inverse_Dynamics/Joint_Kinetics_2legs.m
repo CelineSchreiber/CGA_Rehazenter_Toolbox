@@ -37,7 +37,7 @@ n = size(Joint(1).F,3);
 % RIGHT SIDE
 % =========================================================================
 
-% Extend Segment fields
+% Extend Segment fields ==> Segment = Extend_Segment_Fields(Segment);
 % -------------------------------------------------------------------------
 for i = 1:5 % From i = 1 forceplate to i = 5 pelvis
     % 1rst priority for Q parameter setting
@@ -139,7 +139,7 @@ Joint(1).phi = Mprod_array3(T,Mprod_array3(...
     - permute(Joint(1).F,[2,1,3]),zeros(1,1,n)],...
     permute(T,[2,1,3])));
 
-% Kinematics
+% Kinematics ==> Segment = Kinematics_HM(Segment,f,n);
 % -------------------------------------------------------------------------
 % Time sampling
 dt = 1/f;
@@ -180,7 +180,7 @@ for i = 2:5  % From i = 2 foot to i = 5 pelvis
      Segment(i).A = Segment(i).A(1:3,1,:); % Discard last line    
 end
 
-% Dynamics
+% Dynamics ==> [Joint,Segment] = Dynamics_HM(Joint,Segment,n);
 % -------------------------------------------------------------------------
 % Acceleration of gravity expressed in ICS in dimension (3*1*n)
 g = repmat([0;-9.81;0],[1,1,n]); 
@@ -213,6 +213,7 @@ for i = 2:4 % From i = 2 foot to i = 4 thigh
     Joint(i).M(2,1,:) = (phi(1,3,:) - phi(3,1,:))/2;
     Joint(i).M(3,1,:) = (-phi(1,2,:) + phi(2,1,:))/2;    
 end
+
 for i = 2:4 % i = 2 ankle to i = 4 hip
     % Proximal segment axis
     Tw = Q2Tw_array3(Segment(i+1).Q); % Segment axis
