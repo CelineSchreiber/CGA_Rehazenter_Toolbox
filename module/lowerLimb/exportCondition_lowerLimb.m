@@ -11,7 +11,7 @@
 % Version: 1
 % =========================================================================
 
-function Output = exportCondition_lowerLimb(Session,Output,Segment,Joint,EMG,Event,Spatiotemporal,fMarker,fAnalog)
+function Output = exportCondition_lowerLimb(Session,Output,Segment,Joint,EMG,Event,Spatiotemporal)
 
 % =========================================================================
 % Initialisation
@@ -24,14 +24,14 @@ Output.Dynamics = [];
 Output.EMG = [];
 Output.Events = [];
 % Express events as % of gait cycle
-mRHS = fix(Event.RHS*fMarker);
-mRTO = fix(Event.RTO*fMarker);
-mLHS = fix(Event.LHS*fMarker);
-mLTO = fix(Event.LTO*fMarker);
-aRHS = fix(Event.RHS*fAnalog);
-aRTO = fix(Event.RTO*fAnalog);
-aLHS = fix(Event.LHS*fAnalog);
-aLTO = fix(Event.LTO*fAnalog);
+mRHS = fix(Event.RHS*Session.frq.fMarker);
+mRTO = fix(Event.RTO*Session.frq.fMarker);
+mLHS = fix(Event.LHS*Session.frq.fMarker);
+mLTO = fix(Event.LTO*Session.frq.fMarker);
+aRHS = fix(Event.RHS*Session.frq.fAnalog);
+aRTO = fix(Event.RTO*Session.frq.fAnalog);
+aLHS = fix(Event.LHS*Session.frq.fAnalog);
+aLTO = fix(Event.LTO*Session.frq.fAnalog);
 % Interpolation parameters
 R_n = mRHS(2)-mRHS(1)+1;
 R_k = (1:R_n)';
@@ -434,6 +434,12 @@ if ~isempty(EMG)
     for i = 1:size(nEMG,1)
         % Right gait cycle
         if strfind(nEMG{i},'R_')
+            temp = EMG.(nEMG{i}).raw(:,:,:);
+            if sum(isnan(temp)) ~= size(isnan(temp),3)
+                Output.EMG.([nEMG{i},'_Raw']) = permute(temp,[2,3,1])';
+            else
+                Output.EMG.([nEMG{i},'_Raw']) = NaN(length(aRHS(1):aRHS(2)),1);
+            end  
             temp = EMG.(nEMG{i}).signal(:,:,aRHS(1):aRHS(2));
             if sum(isnan(temp)) ~= size(isnan(temp),3)
                 Output.EMG.([nEMG{i},'_Signal']) = permute(temp,[2,3,1])';
@@ -449,6 +455,12 @@ if ~isempty(EMG)
         end
         % Left gait cycle
         if strfind(nEMG{i},'L_')
+            temp = EMG.(nEMG{i}).raw(:,:,:);
+            if sum(isnan(temp)) ~= size(isnan(temp),3)
+                Output.EMG.([nEMG{i},'_Raw']) = permute(temp,[2,3,1])';
+            else
+                Output.EMG.([nEMG{i},'_Raw']) = NaN(length(aLHS(1):aLHS(2)),1);
+            end 
             temp = EMG.(nEMG{i}).signal(:,:,aLHS(1):aLHS(2));
             if sum(isnan(temp)) ~= size(isnan(temp),3)
                 Output.EMG.([nEMG{i},'_Signal']) = permute(temp,[2,3,1])';
@@ -476,3 +488,4 @@ Output.Events.L_RHS = fix((mRHS-mLHS(1)+1)*100/(mLHS(2)-mLHS(1)+1));
 Output.Events.L_RTO = fix((mRTO-mLHS(1)+1)*100/(mLHS(2)-mLHS(1)+1));
 Output.Events.L_LHS = fix((mLHS-mLHS(1)+1)*100/(mLHS(2)-mLHS(1)+1));
 Output.Events.L_LTO = fix((mLTO-mLHS(1)+1)*100/(mLHS(2)-mLHS(1)+1));
+Output.Events.e = Event.e;

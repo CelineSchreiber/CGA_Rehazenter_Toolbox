@@ -62,4 +62,4 @@ startClinicalReport_lowerLimb()
 % =========================================================================
 % Excel Reporting tool
 % =========================================================================
-startReport_lowerLimb(toolboxFolder,sessionFolder,patientFolder)
+% startReport_lowerLimb(toolboxFolder,sessionFolder,patientFolder)

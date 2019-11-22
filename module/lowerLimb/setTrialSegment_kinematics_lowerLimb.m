@@ -12,7 +12,7 @@
 % =========================================================================
 
 function [Segment,Vmarker,btk2] = ...
-    setTrialSegment_kinematics_lowerLimb(Session,Patient,Condition,Marker,Event,Forceplate,tGrf,Grf,btk,btk2,s,fMarker)
+    setTrialSegment_kinematics_lowerLimb(Session,Patient,Condition,Marker,Event,Forceplate,tGrf,Grf,btk,btk2,s)
 
 n = size(Marker.R_IAS,3);
 

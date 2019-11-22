@@ -13,6 +13,7 @@
 function [Event,btk2] = exportEvents(Event,trial,btk2,fMarker)
 
 nEvent = fieldnames(Event);
+Event.e= Event;
 events = round(sort([Event.RHS,Event.RTO,Event.LHS,Event.LTO])*fMarker)-...
     btkGetFirstFrame(trial)+1;
 for i = 1:length(nEvent)

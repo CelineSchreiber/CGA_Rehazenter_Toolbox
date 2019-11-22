@@ -54,9 +54,9 @@ for i=1:length(Session)
 end
 [icondition,ok]=listdlg('ListString',condNames,'ListSize',[300 300]);
 files=[];
-for i=1:length(Session(icondition).Gait)
-    if strcmp(Session(icondition).Gait(i).condition,Condition(icondition).name) && strcmp(Session(icondition).Gait(i).emgtrial,'yes')
-        files=[files;Session(icondition).Gait(i).filename];
+for i=1:length(Session(icondition).Trial)
+    if strcmp(Session(icondition).Trial(i).condition,Condition(icondition).name)
+        files=[files;Session(icondition).Trial(i).filename];
     end
 end
 if ~isempty(files)
@@ -66,12 +66,12 @@ else
     return;
 end
 
-number_frame_cycle = Condition(icondition).Gait(itrial).Revents.e.LHS(2)*Session(icondition).fanalog...
-                - Condition(icondition).Gait(itrial).Revents.e.LHS(1)*Session(icondition).fanalog;
-X_down = Condition(icondition).Gait(itrial).Revents.e.LHS(1)*Session(icondition).fanalog-2*number_frame_cycle;
-X_up = Condition(icondition).Gait(itrial).Revents.e.LHS(2)*Session(icondition).fanalog+2*number_frame_cycle;
+number_frame_cycle = Condition(icondition).Trial(itrial).LowerLimb.Events.e.LHS(2)*Session(icondition).frq.fAnalog...
+                - Condition(icondition).Trial(itrial).LowerLimb.Events.e.LHS(1)*Session(icondition).frq.fAnalog;
+X_down = Condition(icondition).Trial(itrial).LowerLimb.Events.e.LHS(1)*Session(icondition).frq.fAnalog-2*number_frame_cycle;
+X_up = Condition(icondition).Trial(itrial).LowerLimb.Events.e.LHS(2)*Session(icondition).frq.fAnalog+2*number_frame_cycle;
 nf=1;            
-if ~isempty(Condition(icondition).Gait(itrial).Remg)
+if ~isempty(Condition(icondition).Trial(itrial).LowerLimb.EMG)
 
     % =====================================================================
     % Generate the page 1 (right side)
@@ -82,21 +82,21 @@ if ~isempty(Condition(icondition).Gait(itrial).Remg)
     Remg_raw = nan(90000,8); % 1min maximum as EMG recording (1500Hz * 60s)
     Remg_filt = nan(101,8); % normalized data
     Remg_name = [];
-    names = fieldnames(Condition(icondition).Gait(itrial).Remg);
+    names = fieldnames(Condition(icondition).Trial(itrial).LowerLimb.EMG);
     k1 = 1;
     k2 = 1;
     for j = 1:length(names)
-        if strfind(names{j},'_raw')
-            Remg_raw(1:size(Condition(icondition).Gait(itrial).Remg.(names{j}),1),k1) = ...
-                Condition(icondition).Gait(itrial).Remg.(names{j});
+        if ~isempty(strfind(names{j},'_Raw')) && ~isempty(strfind(names{j},'R_'))
+            Remg_raw(1:size(Condition(icondition).Trial(itrial).LowerLimb.EMG.(names{j}),1),k1) = ...
+                Condition(icondition).Trial(itrial).LowerLimb.EMG.(names{j});
             Remg_name{k1} = regexprep(names{j},'_raw','');
             k1 = k1+1;
         end
-        if strfind(names{j},'_filt')
-            Remg_filt.mean(1:size(Condition(icondition).All.Remg.(names{j}).mean,1),k2) = ...
-                Condition(icondition).All.Remg.(names{j}).mean;
-            Remg_filt.std(1:size(Condition(icondition).All.Remg.(names{j}).mean,1),k2) = ...
-                Condition(icondition).All.Remg.(names{j}).std;
+        if ~isempty(strfind(names{j},'_Envelop'))  && ~isempty(strfind(names{j},'R_'))
+            Remg_filt.mean(1:size(Condition(icondition).Average.LowerLimb.EMG.(names{j}).mean,1),k2) = ...
+                Condition(icondition).Average.LowerLimb.EMG.(names{j}).mean;
+            Remg_filt.std(1:size(Condition(icondition).Average.LowerLimb.EMG.(names{j}).mean,1),k2) = ...
+                Condition(icondition).Average.LowerLimb.EMG.(names{j}).std;
             k2 = k2+1;
         end
     end
@@ -169,8 +169,8 @@ if ~isempty(Condition(icondition).Gait(itrial).Remg)
     set(axesLegend,'Visible','Off');
     % Count the number of trials
     nbtrials = 0;
-    for j = 1:length(Condition(icondition).Gait);
-        nbtrials=nbtrials+~isempty(Condition(icondition).Gait(j).Remg);
+    for j = 1:length(Condition(icondition).Trial);
+        nbtrials=nbtrials+~isempty(Condition(icondition).Trial(j).LowerLimb.EMG);
     end
     % Write the legend
     text(0.05,y/pageHeight,[char(files(itrial,:))]);
@@ -243,8 +243,8 @@ if ~isempty(Condition(icondition).Gait(itrial).Remg)
         set(Graph(igraph),'FontSize',8,'YGrid','on','XTick',[0:50:100],'YTick',0:0.25:1,'YTickLabel',{'0' '25' '50' '75' '100'});
         axis tight;
         axis([0 100 0 1]);
-        plot([Condition(icondition).Gait(itrial).Rphases.p5 ...
-            Condition(icondition).Gait(itrial).Rphases.p5],...
+        plot([Condition(icondition).Trial(itrial).LowerLimb.Spatiotemporal.R_Stance_Phase ...
+            Condition(icondition).Trial(itrial).LowerLimb.Spatiotemporal.R_Stance_Phase],...
             [0 1],'Linestyle','--','Linewidth',1,'Color','black');
         box on;
     end
@@ -321,8 +321,8 @@ if ~isempty(Condition(icondition).Gait(itrial).Remg)
         set(axesLegend,'Visible','Off');
         % Count the number of trials
         nbtrials = 0;
-        for j = 1:length(Condition(icondition).Gait);
-            if ~isempty(Condition(icondition).Gait(j).Remg)
+        for j = 1:length(Condition(icondition).Trial);
+            if ~isempty(Condition(icondition).Trial(j).LowerLimb.EMG)
                 nbtrials = nbtrials+1;
             end
         end
@@ -397,8 +397,8 @@ if ~isempty(Condition(icondition).Gait(itrial).Remg)
             set(Graph(igraph),'FontSize',8,'YGrid','on','XTick',[0:50:100],'YTick',0:0.25:1,'YTickLabel',{'0' '25' '50' '75' '100'});
             axis tight;
             axis([0 100 0 1]);
-            plot([Condition(icondition).Gait(itrial).Rphases.p5 ...
-                Condition(icondition).Gait(itrial).Rphases.p5],...
+            plot([Condition(icondition).Trial(itrial).LowerLimb.Spatiotemporal.R_Stance_Phase ...
+                Condition(icondition).Trial(itrial).LowerLimb.Spatiotemporal.R_Stance_Phase],...
                 [0 1],'Linestyle','--','Linewidth',1,'Color','black');
             box on;
         end
@@ -411,20 +411,20 @@ if ~isempty(Condition(icondition).Gait(itrial).Remg)
         XL(1) = max(XL(1),X_down);
         XL(2) = min(XL(2),X_up);
         axis([XL(1) XL(2) YL(1) YL(2)]);
-        plot([Condition(icondition).Gait(itrial).Revents.e.RHS(1)*Session(icondition).fanalog ...
-            Condition(icondition).Gait(itrial).Revents.e.RHS(1)*Session(icondition).fanalog],...
+        plot([Condition(icondition).Trial(itrial).LowerLimb.Events.e.RHS(1)*Session(icondition).frq.fAnalog ...
+            Condition(icondition).Trial(itrial).LowerLimb.Events.e.RHS(1)*Session(icondition).frq.fAnalog],...
             [YL(1) YL(2)],'Linestyle','-','Linewidth',1,'Color','black');
-        plot([Condition(icondition).Gait(itrial).Revents.e.RTO(end)*Session(icondition).fanalog ...
-            Condition(icondition).Gait(itrial).Revents.e.RTO(end)*Session(icondition).fanalog],...
+        plot([Condition(icondition).Trial(itrial).LowerLimb.Events.e.RTO(end)*Session(icondition).frq.fAnalog ...
+            Condition(icondition).Trial(itrial).LowerLimb.Events.e.RTO(end)*Session(icondition).frq.fAnalog],...
             [YL(1) YL(2)],'Linestyle','--','Linewidth',1,'Color','black');
-        plot([Condition(icondition).Gait(itrial).Revents.e.RHS(2)*Session(icondition).fanalog ...
-            Condition(icondition).Gait(itrial).Revents.e.RHS(2)*Session(icondition).fanalog],...
+        plot([Condition(icondition).Trial(itrial).LowerLimb.Events.e.RHS(2)*Session(icondition).frq.fAnalog ...
+            Condition(icondition).Trial(itrial).LowerLimb.Events.e.RHS(2)*Session(icondition).frq.fAnalog],...
             [YL(1) YL(2)],'Linestyle','-','Linewidth',1,'Color','black');
         box on;
     end
 end
 
-if ~isempty(Condition(icondition).Gait(itrial).Lemg)
+if ~isempty(Condition(icondition).Trial(itrial).LowerLimb.EMG)
     
     % =====================================================================
     % Generate the page 2 (left side)
@@ -435,21 +435,21 @@ if ~isempty(Condition(icondition).Gait(itrial).Lemg)
     Lemg_raw = nan(90000,8); % 1min maximum as EMG recording (1500Hz * 60s)
     Lemg_filt = nan(101,8); % normalized data
     Lemg_name = [];
-    names = fieldnames(Condition(icondition).Gait(itrial).Lemg);
+    names = fieldnames(Condition(icondition).Trial(itrial).LowerLimb.EMG);
     k1 = 1;
     k2 = 1;
     for j = 1:length(names)
-        if strfind(names{j},'_raw')
-            Lemg_raw(1:size(Condition(icondition).Gait(itrial).Lemg.(names{j}),1),k1) = ...
-                Condition(icondition).Gait(itrial).Lemg.(names{j});
+        if ~isempty(strfind(names{j},'_Raw')) && ~isempty(strfind(names{j},'L_'))
+            Lemg_raw(1:size(Condition(icondition).Trial(itrial).LowerLimb.EMG.(names{j}),1),k1) = ...
+                Condition(icondition).Trial(itrial).LowerLimb.EMG.(names{j});
             Lemg_name{k1} = regexprep(names{j},'_raw','');
             k1 = k1+1;
         end
-        if strfind(names{j},'_filt')
-            Lemg_filt.mean(1:size(Condition(icondition).All.Lemg.(names{j}).mean,1),k2) = ...
-                Condition(icondition).All.Lemg.(names{j}).mean;
-            Lemg_filt.std(1:size(Condition(icondition).All.Lemg.(names{j}).mean,1),k2) = ...
-                Condition(icondition).All.Lemg.(names{j}).std;
+        if ~isempty(strfind(names{j},'_Envelop')) && ~isempty(strfind(names{j},'L_'))
+            Lemg_filt.mean(1:size(Condition(icondition).Average.LowerLimb.EMG.(names{j}).mean,1),k2) = ...
+                Condition(icondition).Average.LowerLimb.EMG.(names{j}).mean;
+            Lemg_filt.std(1:size(Condition(icondition).Average.LowerLimb.EMG.(names{j}).mean,1),k2) = ...
+                Condition(icondition).Average.LowerLimb.EMG.(names{j}).std;
             k2 = k2+1;
         end
     end
@@ -524,8 +524,8 @@ if ~isempty(Condition(icondition).Gait(itrial).Lemg)
     set(axesLegend,'Visible','Off');
     % Count the number of trials
     nbtrials = 0;
-    for j = 1:length(Condition(icondition).Gait);
-        if ~isempty(Condition(icondition).Gait(j).Lemg)
+    for j = 1:length(Condition(icondition).Trial);
+        if ~isempty(Condition(icondition).Trial(j).LowerLimb.EMG)
             nbtrials = nbtrials+1;
         end
     end
@@ -600,8 +600,8 @@ if ~isempty(Condition(icondition).Gait(itrial).Lemg)
         set(Graph(igraph),'FontSize',8,'YGrid','on','XTick',[0:50:100],'YTick',0:0.25:1,'YTickLabel',{'0' '25' '50' '75' '100'});
         axis tight;
         axis([0 100 0 1]);
-        plot([Condition(icondition).Gait(itrial).Lphases.p5 ...
-            Condition(icondition).Gait(itrial).Lphases.p5],...
+        plot([Condition(icondition).Trial(itrial).LowerLimb.Spatiotemporal.L_Stance_Phase ...
+            Condition(icondition).Trial(itrial).LowerLimb.Spatiotemporal.L_Stance_Phase],...
             [0 1],'Linestyle','--','Linewidth',1,'Color','black');
         box on;
     end
@@ -678,8 +678,8 @@ if ~isempty(Condition(icondition).Gait(itrial).Lemg)
         set(axesLegend,'Visible','Off');
         % Count the number of trials
         nbtrials = 0;
-        for j = 1:length(Condition(icondition).Gait);
-            if ~isempty(Condition(icondition).Gait(j).Lemg)
+        for j = 1:length(Condition(icondition).Trial);
+            if ~isempty(Condition(icondition).Trial(j).LowerLimb.EMG)
                 nbtrials = nbtrials+1;
             end
         end
@@ -754,8 +754,8 @@ if ~isempty(Condition(icondition).Gait(itrial).Lemg)
             set(Graph(igraph),'FontSize',8,'YGrid','on','XTick',[0:50:100],'YTick',0:0.25:1,'YTickLabel',{'0' '25' '50' '75' '100'});
             axis tight;
             axis([0 100 0 1]);
-            plot([Condition(icondition).Gait(itrial).Lphases.p5 ...
-                Condition(icondition).Gait(itrial).Lphases.p5],...
+            plot([Condition(icondition).Trial(itrial).LowerLimb.Spatiotemporal.L_Stance_Phase ...
+                Condition(icondition).Trial(itrial).LowerLimb.Spatiotemporal.L_Stance_Phase],...
                 [0 1],'Linestyle','--','Linewidth',1,'Color','black');
             box on;
         end
@@ -769,14 +769,14 @@ if ~isempty(Condition(icondition).Gait(itrial).Lemg)
         XL(1) = max(XL(1),X_down);
         XL(2) = min(XL(2),X_up);
         axis([XL(1) XL(2) YL(1) YL(2)]);
-        plot([Condition(icondition).Gait(itrial).Revents.e.LHS(1)*Session(icondition).fanalog ...
-            Condition(icondition).Gait(itrial).Revents.e.LHS(1)*Session(icondition).fanalog],...
+        plot([Condition(icondition).Trial(itrial).LowerLimb.Events.e.LHS(1)*Session(icondition).frq.fAnalog ...
+            Condition(icondition).Trial(itrial).LowerLimb.Events.e.LHS(1)*Session(icondition).frq.fAnalog],...
             [YL(1) YL(2)],'Linestyle','-','Linewidth',1,'Color','black');
-        plot([Condition(icondition).Gait(itrial).Revents.e.LTO(end)*Session(icondition).fanalog ...
-            Condition(icondition).Gait(itrial).Revents.e.LTO(end)*Session(icondition).fanalog],...
+        plot([Condition(icondition).Trial(itrial).LowerLimb.Events.e.LTO(end)*Session(icondition).frq.fAnalog ...
+            Condition(icondition).Trial(itrial).LowerLimb.Events.e.LTO(end)*Session(icondition).frq.fAnalog],...
             [YL(1) YL(2)],'Linestyle','--','Linewidth',1,'Color','black');
-        plot([Condition(icondition).Gait(itrial).Revents.e.LHS(2)*Session(icondition).fanalog ...
-            Condition(icondition).Gait(itrial).Revents.e.LHS(2)*Session(icondition).fanalog],...
+        plot([Condition(icondition).Trial(itrial).LowerLimb.Events.e.LHS(2)*Session(icondition).frq.fAnalog ...
+            Condition(icondition).Trial(itrial).LowerLimb.Events.e.LHS(2)*Session(icondition).frq.fAnalog],...
             [YL(1) YL(2)],'Linestyle','-','Linewidth',1,'Color','black');
         box on;
     end

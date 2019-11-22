@@ -67,6 +67,9 @@ for i = 1:length(Session.Trial)
         Session.Trial(i).file = btkReadAcquisition(Session.Trial(i).filename);
     end
 end
+Session.frq.fMarkerStatic = btkGetPointFrequency(Session.Static(1).file);
+Session.frq.fMarker = btkGetPointFrequency(Session.Trial(1).file);
+Session.frq.fAnalog = btkGetAnalogFrequency(Session.Trial(1).file);
 cd(toolboxFolder);
 disp(' ');
 
@@ -88,11 +91,10 @@ for i = 1:length(Session.conditions)
             % Get information from initial C3D file
             static = Session.Static(j).file;
             Marker = btkGetMarkers(static);
-            fMarker = btkGetPointFrequency(static);
             % Set BTK parameters to export a new C3D file
             btk2 = btkNewAcquisition(btkGetPointNumber(static));
             btkSetFrameNumber(btk2,1);
-            btkSetFrequency(btk2,fMarker);          
+            btkSetFrequency(btk2,Session.frq.fMarkerStatic);          
             % Import mean markers 3D position
             [Marker,btk2] = importStaticMarker(Marker,btk2);            
             % Lower limb kinematic chain
@@ -139,18 +141,16 @@ for i = 1:length(Session.conditions)
             Forceplate = btkGetForcePlatforms(trial);
             tGrf = btkGetForcePlatformWrenches(trial); % used for c3d export
             Grf = btkGetGroundReactionWrenches(trial); % used for matlab process
-            fMarker = btkGetPointFrequency(trial);
-            fAnalog = btkGetAnalogFrequency(trial);
             n0 = btkGetFirstFrame(trial);
             n = btkGetLastFrame(trial)-btkGetFirstFrame(trial)+1;
             % Import markers 3D trajectories
-            [Marker,btk2] = importTrialMarker(Marker,Event,n0,fMarker,fAnalog);
+            [Marker,btk2] = importTrialMarker(Marker,Event,n0,Session.frq.fMarker,Session.frq.fAnalog);
             % Import reaction forces
-            [Grf,tGrf] = importTrialReaction(Event,Forceplate,tGrf,Grf,btk2,n0,n,fMarker,fAnalog);
+            [Grf,tGrf] = importTrialReaction(Event,Forceplate,tGrf,Grf,btk2,n0,n,Session.frq.fMarker,Session.frq.fAnalog);
             % Import EMG signals
-            [EMG,btk2] = importTrialEMG(Session,Analog,Event,btk2,n0,n,fMarker,fAnalog);
+            [EMG,btk2] = importTrialEMG(Session,Analog,Event,btk2,n0,n);
             % Update and export events
-            [Event,btk2] = exportEvents(Event,trial,btk2,fMarker);
+            [Event,btk2] = exportEvents(Event,trial,btk2,Session.frq.fMarker);
             % Export normalisation values
             btk2 = exportNormalisationValues(Session,Patient,btk2);
             
@@ -161,9 +161,9 @@ for i = 1:length(Session.conditions)
                 disp('      Lower limb');
                 % Set body segments for kinematics
                 [Segment,Vmarker,btk2] = ... 
-                    setTrialSegment_kinematics_lowerLimb(Session,Patient,Condition(i),Marker,Event,Forceplate,tGrf,Grf,trial,btk2,Session.Trial(j).s,fMarker);
+                    setTrialSegment_kinematics_lowerLimb(Session,Patient,Condition(i),Marker,Event,Forceplate,tGrf,Grf,trial,btk2,Session.Trial(j).s);
                 % Compute spatiotemporal parameters
-                [Spatiotemporal,btk2] = computeSpatiotemporal_lowerLimb(Session,Vmarker,Event,fMarker,fAnalog,btk2);
+                [Spatiotemporal,btk2] = computeSpatiotemporal_lowerLimb(Session,Vmarker,Event,btk2);
                 % Compute joint kinematics
                 [Joint,btk2] = computeJointKinematics_lowerLimb(Segment,btk2);
                 % Compute segment kinematics
@@ -172,10 +172,10 @@ for i = 1:length(Session.conditions)
                 [Segment,Joint,btk2] = ...
                     setTrialSegment_kinetics_lowerLimb(Session,Patient,Segment,Joint,Marker,Grf,btk2,Session.Trial(j).s);
                 % Compute kinetics
-                [Segment,Joint,btk2] = computeJointKinetics_lowerLimb(Session,Segment,Joint,fMarker,btk2);
+                [Segment,Joint,btk2] = computeJointKinetics_lowerLimb(Session,Segment,Joint,btk2);
                 % Store data in Condition (keep only intra cycle data)
                 Condition(i).Trial(k).LowerLimb = ...
-                    exportCondition_lowerLimb(Session,Condition(i).Trial(k).LowerLimb,Segment,Joint,EMG,Event,Spatiotemporal,fMarker,fAnalog);        
+                    exportCondition_lowerLimb(Session,Condition(i).Trial(k).LowerLimb,Segment,Joint,EMG,Event,Spatiotemporal);        
             end
             
             % Upper limb kinematic chain

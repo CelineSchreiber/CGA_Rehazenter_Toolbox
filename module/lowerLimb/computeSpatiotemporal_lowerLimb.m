@@ -11,7 +11,7 @@
 % =========================================================================
 
 function [Spatiotemporal,btk2] = ...
-    computeSpatiotemporal_lowerLimb(Session,Vmarker,Event,fMarker,fAnalog,btk2)
+    computeSpatiotemporal_lowerLimb(Session,Vmarker,Event,btk2)
 
 % =========================================================================
 % Initialisation
@@ -37,10 +37,10 @@ Spatiotemporal.Cadence = [];                                               % ste
 Spatiotemporal.Velocity = [];                                              % m/s
 Spatiotemporal.Velocity_Adim = [];                                         % adimensioned
 e = Event;
-Event.RHS = fix(Event.RHS*fMarker);
-Event.RTO = fix(Event.RTO*fMarker);
-Event.LHS = fix(Event.LHS*fMarker);
-Event.LTO = fix(Event.LTO*fMarker);
+Event.RHS = fix(Event.RHS*Session.frq.fMarker);
+Event.RTO = fix(Event.RTO*Session.frq.fMarker);
+Event.LHS = fix(Event.LHS*Session.frq.fMarker);
+Event.LTO = fix(Event.LTO*Session.frq.fMarker);
 
 % =========================================================================
 % Phases
