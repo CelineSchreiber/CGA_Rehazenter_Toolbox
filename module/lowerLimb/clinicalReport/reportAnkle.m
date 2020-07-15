@@ -36,6 +36,7 @@ igraph = 1; % graph number
 colorR = [0 0.8 0;0 0.8 0.8;0 0.4 0;0 0.4 0.4;0 0.2 0;0 0.2 0.2];
 colorL = [0.8 0 0;0.8 0 0.8;0.4 0 0;0.4 0 0.4;0.2 0 0;0.2 0 0.2];
 colorB = [0 0 0.8;0.2 0.2 0.8;0.5 0.5 0.8;0.7 0.7 0.8;0.9 0.9 0.8;0.9 0.9 0.6];
+
 cd(normFolder);
 temp = load(cell2mat(norm));
 Norm.Kinematics = temp.Normatives.Rkinematics;
@@ -52,8 +53,7 @@ for i = 1:size(Condition,2)
     Levent(i) = Condition(i).Average.LowerLimb.Spatiotemporal.L_Stance_Phase;
 end
 
-% EMG %
-%------
+% EMG: choix de l'essai %
 icondition = [];
 itrial = [];
 condNames=cell(1,length(Session));
@@ -84,7 +84,7 @@ nf=1;
 % Generate the page
 % =========================================================================
 % Case 1: Only 1 condition: page 1 = right and left parameters
-% Case 2: More than 1 condition: page 1 = right, page 2 = left
+% Case 2: More than 1 condition: page 1 = right, page 2 = left A FAIRE!
 % =========================================================================
 if size(Condition,2) == 1
     
@@ -100,10 +100,12 @@ if size(Condition,2) == 1
     
     % Rehazenter banner
     % ---------------------------------------------------------------------
+    a=annotation('textbox',[0.015 0.925 0.970 0.06],'BackgroundColor','none','EdgeColor',[0 0 0],...
+        'LineStyle','-','LineWidth',0.5000,'Units','normalized');
     cd(pluginFolder);
-    banner = imread('banner','jpeg');
+    banner = imread('banner','png');
     axesImage = axes('position',...
-        [0 0.89 1 0.12]);
+        [0.05 0.93 0.2 0.0502]);
     image(banner);
     set(axesImage,'Visible','Off');
     
@@ -113,18 +115,18 @@ if size(Condition,2) == 1
     set(axesText,'Position',[0.47 0 1 1]);
     set(axesText,'Visible','Off');
     y = yinit;
-    y = y - 0.8;
+    y = y - 0.5;
     text(0.5/pageWidth,y/pageHeight,...
         'CNRFR - Rehazenter',...
-        'Color','w','FontSize',12);
+        'Color','k','FontSize',12);
     y = y - yincr;
     text(0.5/pageWidth,y/pageHeight,...
         'Laboratoire d''Analyse du Mouvement et de la Posture',...
-        'Color','w','FontSize',11);
+        'Color','k','FontSize',11);
     
     % Patient
     % ---------------------------------------------------------------------
-    y = y - yincr*4;
+    y = y - yincr*3;
     axesLegend = axes;
     set(axesLegend,'Position',[0 0 1 1]);
     set(axesLegend,'Visible','Off');
@@ -136,32 +138,32 @@ if size(Condition,2) == 1
     
     % Legend
     % ---------------------------------------------------------------------
+    y = y + yincr;
+    text(0.45,y/pageHeight,'Date AQM : ','FontWeight','Bold','Color','black');
+    text(0.55,y/pageHeight,[char(Session(1).date)],'Color','black');
+    text(0.70,y/pageHeight,['Condition : ',char(regexprep(Condition(1).name,'_','-')),' (cf page 1)'],'Color','black');
     y = y - yincr;
-    for i = 1:size(Condition,2)
-        % Count the number of trials
-        nbtrials = 0;
-        for j = 1:length(Condition(i).Trial);
-            if ~isempty(Condition(i).Trial(j).LowerLimb.Segmentkinematics.R_Pelvis_Angle_AA)
-                nbtrials = nbtrials+1;
-            end
+    % Count the number of trials
+    nbtrials = 0;
+    for j = 1:length(Condition(1).Trial);
+        if ~isempty(Condition(1).Trial(j).LowerLimb.Segmentkinematics.R_Pelvis_Angle_AA)
+            nbtrials = nbtrials+1;
         end
-        % Write the legend
-        text(0.05,y/pageHeight,['Condition ',num2str(i)],'Color',colorB(i,:),'FontWeight','Bold');
-        text(0.25,y/pageHeight,'Droite','Color',colorR(i,:));
-        text(0.30,y/pageHeight,'Gauche','Color',colorL(i,:));
-        text(0.37,y/pageHeight,'Norm','Color',[0.5 0.5 0.5]);
-        text(0.44,y/pageHeight,[char(Session(i).date),...
-            '     Nb essais : ',num2str(nbtrials),...
-            '     Condition : ',char(regexprep(Condition(i).name,'_','-')),' (cf page 1)'],'color','k');
-        y = y - yincr*1.0;
     end
+    % Write the legend
+    text(0.45,y/pageHeight,'Nb essais : ','Color','black');
+    text(0.55,y/pageHeight,num2str(nbtrials),'Color','black'); 
+    text(0.70,y/pageHeight,'Droite','Color',colorR(1,:));
+    text(0.80,y/pageHeight,'Gauche','Color',colorL(1,:));
+    text(0.90,y/pageHeight,'Norme','Color',[0.5 0.5 0.5]);
+    y = y - yincr*1.2;
     
     % Title
     % ---------------------------------------------------------------------
     axesText = axes;
     set(axesText,'Position',[0.47 0 1 1]);
     set(axesText,'Visible','Off');
-    y = y - yincr;
+    y = y - yincr*1.5;
     text(0.02,y/pageHeight,...
         '  Cinématique',...
         'Color','k','FontWeight','Bold','FontSize',14,...
@@ -178,16 +180,17 @@ if size(Condition,2) == 1
     set(Graph(igraph),'FontSize',8,'YGrid','on','XTick',[0 25 50 75 100],'YTick',-100:10:100);
     hold on;
     title('Ankle flexion/extension (Dorsi+)','FontWeight','Bold');
-    xlabel('Gait cycle (%)','FontSize',8,'HorizontalAlignment','center','VerticalAlignment','Middle'); ylabel('Angle (deg)','FontSize',8,'HorizontalAlignment','center','VerticalAlignment','Middle');
+    xlabel('Gait cycle (%)','FontSize',8,'HorizontalAlignment','center','VerticalAlignment','Middle'); 
+    ylabel('Angle (deg)','FontSize',8,'HorizontalAlignment','center','VerticalAlignment','Middle');
     plot(1:100,zeros(100,1),'Linestyle','-','Linewidth',0.5,'Color','black');
     corridor(Norm.Kinematics.FE2.mean,Norm.Kinematics.FE2.std,[0.5 0.5 0.5]);
-    if ~isempty(Jkinematics(i).R_Ankle_Angle_FE.mean)
-        corridor(Jkinematics(i).R_Ankle_Angle_FE.mean,Jkinematics(i).R_Ankle_Angle_FE.std,colorR(i,:));
-        plot(Jkinematics(i).R_Ankle_Angle_FE.mean,'Linestyle','-','Linewidth',2,'Color',colorR(i,:));
+    if ~isempty(Jkinematics.R_Ankle_Angle_FE.mean)
+        corridor(Jkinematics.R_Ankle_Angle_FE.mean,Jkinematics.R_Ankle_Angle_FE.std,colorR(1,:));
+        plot(Jkinematics.R_Ankle_Angle_FE.mean,'Linestyle','-','Linewidth',2,'Color',colorR(1,:));
     end
-    if ~isempty(Jkinematics(i).L_Ankle_Angle_FE.mean)
-        corridor(Jkinematics(i).L_Ankle_Angle_FE.mean,Jkinematics(i).L_Ankle_Angle_FE.std,colorL(i,:));
-        plot(Jkinematics(i).L_Ankle_Angle_FE.mean,'Linestyle','-','Linewidth',2,'Color',colorL(i,:));
+    if ~isempty(Jkinematics.L_Ankle_Angle_FE.mean)
+        corridor(Jkinematics.L_Ankle_Angle_FE.mean,Jkinematics.L_Ankle_Angle_FE.std,colorL(1,:));
+        plot(Jkinematics.L_Ankle_Angle_FE.mean,'Linestyle','-','Linewidth',2,'Color',colorL(1,:));
     end
     axis tight;
     YL = ylim;
@@ -209,13 +212,13 @@ if size(Condition,2) == 1
     xlabel('Gait cycle (%)','FontSize',8,'HorizontalAlignment','center','VerticalAlignment','Middle'); ylabel('Angle (deg)','FontSize',8,'HorizontalAlignment','center','VerticalAlignment','Middle');
     plot(1:100,zeros(100,1),'Linestyle','-','Linewidth',0.5,'Color','black');
     corridor(Norm.Kinematics.IER2.mean,Norm.Kinematics.IER2.std,[0.5 0.5 0.5]);
-    if ~isempty(Jkinematics(i).R_Ankle_Angle_IER.mean)
-        corridor(Jkinematics(i).R_Ankle_Angle_IER.mean,Jkinematics(i).R_Ankle_Angle_IER.std,colorR(i,:));
-        plot(Jkinematics(i).R_Ankle_Angle_IER.mean,'Linestyle','-','Linewidth',2,'Color',colorR(i,:));
+    if ~isempty(Jkinematics.R_Ankle_Angle_IER.mean)
+        corridor(Jkinematics.R_Ankle_Angle_IER.mean,Jkinematics.R_Ankle_Angle_IER.std,colorR(1,:));
+        plot(Jkinematics.R_Ankle_Angle_IER.mean,'Linestyle','-','Linewidth',2,'Color',colorR(1,:));
     end
-    if ~isempty(Jkinematics(i).L_Ankle_Angle_IER.mean)
-        corridor(Jkinematics(i).L_Ankle_Angle_IER.mean,Jkinematics(i).L_Ankle_Angle_IER.std,colorL(i,:));
-        plot(Jkinematics(i).L_Ankle_Angle_IER.mean,'Linestyle','-','Linewidth',2,'Color',colorL(i,:));
+    if ~isempty(Jkinematics.L_Ankle_Angle_IER.mean)
+        corridor(Jkinematics.L_Ankle_Angle_IER.mean,Jkinematics.L_Ankle_Angle_IER.std,colorL(1,:));
+        plot(Jkinematics.L_Ankle_Angle_IER.mean,'Linestyle','-','Linewidth',2,'Color',colorL(1,:));
     end
     axis tight;
     YL = ylim;
@@ -238,13 +241,13 @@ if size(Condition,2) == 1
     xlabel('Gait cycle (%)','FontSize',8,'HorizontalAlignment','center','VerticalAlignment','Middle'); ylabel('Angle (deg)','FontSize',8,'HorizontalAlignment','center','VerticalAlignment','Middle');
     plot(1:100,zeros(100,1),'Linestyle','-','Linewidth',0.5,'Color','black');
         corridor(Norm.Kinematics.Ftilt.mean,Norm.Kinematics.Ftilt.std,[0.5 0.5 0.5]);
-    if ~isempty(Skinematics(i).R_Foot_Angle_FE.mean)
-        corridor(Skinematics(i).R_Foot_Angle_FE.mean,Skinematics(i).R_Foot_Angle_FE.std,colorR(i,:));
-        plot(Skinematics(i).R_Foot_Angle_FE.mean,'Linestyle','-','Linewidth',2,'Color',colorR(i,:));
+    if ~isempty(Skinematics.R_Foot_Angle_FE.mean)
+        corridor(Skinematics.R_Foot_Angle_FE.mean,Skinematics.R_Foot_Angle_FE.std,colorR(1,:));
+        plot(Skinematics.R_Foot_Angle_FE.mean,'Linestyle','-','Linewidth',2,'Color',colorR(1,:));
     end
-    if ~isempty(Skinematics(i).L_Foot_Angle_FE.mean)
-        corridor(Skinematics(i).L_Foot_Angle_FE.mean,Skinematics(i).L_Foot_Angle_FE.std,colorL(i,:));
-        plot(Skinematics(i).L_Foot_Angle_FE.mean,'Linestyle','-','Linewidth',2,'Color',colorL(i,:));
+    if ~isempty(Skinematics.L_Foot_Angle_FE.mean)
+        corridor(Skinematics.L_Foot_Angle_FE.mean,Skinematics.L_Foot_Angle_FE.std,colorL(1,:));
+        plot(Skinematics.L_Foot_Angle_FE.mean,'Linestyle','-','Linewidth',2,'Color',colorL(1,:));
     end
     axis tight;
     YL = ylim;
@@ -266,13 +269,13 @@ if size(Condition,2) == 1
     xlabel('Gait cycle (%)','FontSize',8,'HorizontalAlignment','center','VerticalAlignment','Middle'); ylabel('Angle (deg)','FontSize',8,'HorizontalAlignment','center','VerticalAlignment','Middle');
     plot(1:100,zeros(100,1),'Linestyle','-','Linewidth',0.5,'Color','black');
         corridor(Norm.Kinematics.Fobli.mean,Norm.Kinematics.Fobli.std,[0.5 0.5 0.5]);
-    if ~isempty(Skinematics(i).R_Foot_Angle_AA.mean)
-        corridor(-Skinematics(i).R_Foot_Angle_AA.mean,Skinematics(i).R_Foot_Angle_AA.std,colorR(i,:));
-        plot(-Skinematics(i).R_Foot_Angle_AA.mean,'Linestyle','-','Linewidth',2,'Color',colorR(i,:));
+    if ~isempty(Skinematics.R_Foot_Angle_AA.mean)
+        corridor(-Skinematics.R_Foot_Angle_AA.mean,Skinematics.R_Foot_Angle_AA.std,colorR(1,:));
+        plot(-Skinematics.R_Foot_Angle_AA.mean,'Linestyle','-','Linewidth',2,'Color',colorR(1,:));
     end
-    if ~isempty(Skinematics(i).L_Foot_Angle_AA.mean)
-        corridor(-Skinematics(i).L_Foot_Angle_AA.mean,Skinematics(i).L_Foot_Angle_AA.std,colorL(i,:));
-        plot(-Skinematics(i).L_Foot_Angle_AA.mean,'Linestyle','-','Linewidth',2,'Color',colorL(i,:));
+    if ~isempty(Skinematics.L_Foot_Angle_AA.mean)
+        corridor(-Skinematics.L_Foot_Angle_AA.mean,Skinematics.L_Foot_Angle_AA.std,colorL(1,:));
+        plot(-Skinematics.L_Foot_Angle_AA.mean,'Linestyle','-','Linewidth',2,'Color',colorL(1,:));
     end
     axis tight;
     YL = ylim;
@@ -294,13 +297,13 @@ if size(Condition,2) == 1
     xlabel('Gait cycle (%)','FontSize',8,'HorizontalAlignment','center','VerticalAlignment','Middle'); ylabel('Angle (deg)','FontSize',8,'HorizontalAlignment','center','VerticalAlignment','Middle');
     plot(1:100,zeros(100,1),'Linestyle','-','Linewidth',0.5,'Color','black');
         corridor(Norm.Kinematics.Frota.mean,Norm.Kinematics.Frota.std,[0.5 0.5 0.5]);
-    if ~isempty(Skinematics(i).R_Foot_Angle_IER.mean)
-        corridor(-Skinematics(i).R_Foot_Angle_IER.mean,Skinematics(i).R_Foot_Angle_IER.std,colorR(i,:));
-        plot(-Skinematics(i).R_Foot_Angle_IER.mean,'Linestyle','-','Linewidth',2,'Color',colorR(i,:));
+    if ~isempty(Skinematics.R_Foot_Angle_IER.mean)
+        corridor(-Skinematics.R_Foot_Angle_IER.mean,Skinematics.R_Foot_Angle_IER.std,colorR(1,:));
+        plot(-Skinematics.R_Foot_Angle_IER.mean,'Linestyle','-','Linewidth',2,'Color',colorR(1,:));
     end
-    if ~isempty(Skinematics(i).L_Foot_Angle_IER.mean)
-        corridor(-Skinematics(i).L_Foot_Angle_IER.mean,Skinematics(i).L_Foot_Angle_IER.std,colorL(i,:));
-        plot(-Skinematics(i).L_Foot_Angle_IER.mean,'Linestyle','-','Linewidth',2,'Color',colorL(i,:));
+    if ~isempty(Skinematics.L_Foot_Angle_IER.mean)
+        corridor(-Skinematics.L_Foot_Angle_IER.mean,Skinematics.L_Foot_Angle_IER.std,colorL(1,:));
+        plot(-Skinematics.L_Foot_Angle_IER.mean,'Linestyle','-','Linewidth',2,'Color',colorL(1,:));
     end
     axis tight;
     YL = ylim;
@@ -331,13 +334,13 @@ if size(Condition,2) == 1
     xlabel('Gait cycle (%)','FontSize',8,'HorizontalAlignment','center','VerticalAlignment','Middle'); ylabel('Moment (adimensioned)','FontSize',8,'HorizontalAlignment','center','VerticalAlignment','Middle'); 
     plot(1:100,zeros(100,1),'Linestyle','-','Linewidth',0.5,'Color','black');
     corridor(Norm.Kinetics.FE2.mean,Norm.Kinetics.FE2.std,[0.5 0.5 0.5]);
-    if ~isempty(Dynamics(i).R_Ankle_Moment_FE.mean)
-        corridor(Dynamics(i).R_Ankle_Moment_FE.mean,Dynamics(i).R_Ankle_Moment_FE.std,colorR(i,:));
-        plot(Dynamics(i).R_Ankle_Moment_FE.mean,'Linestyle','-','Linewidth',2,'Color',colorR(i,:));
+    if ~isempty(Dynamics.R_Ankle_Moment_FE.mean)
+        corridor(Dynamics.R_Ankle_Moment_FE.mean,Dynamics.R_Ankle_Moment_FE.std,colorR(1,:));
+        plot(Dynamics.R_Ankle_Moment_FE.mean,'Linestyle','-','Linewidth',2,'Color',colorR(1,:));
     end
-    if ~isempty(Dynamics(i).L_Ankle_Moment_FE.mean)
-        corridor(Dynamics(i).L_Ankle_Moment_FE.mean,Dynamics(i).L_Ankle_Moment_FE.std,colorL(i,:));
-        plot(Dynamics(i).L_Ankle_Moment_FE.mean,'Linestyle','-','Linewidth',2,'Color',colorL(i,:));
+    if ~isempty(Dynamics.L_Ankle_Moment_FE.mean)
+        corridor(Dynamics.L_Ankle_Moment_FE.mean,Dynamics.L_Ankle_Moment_FE.std,colorL(1,:));
+        plot(Dynamics.L_Ankle_Moment_FE.mean,'Linestyle','-','Linewidth',2,'Color',colorL(1,:));
     end
     axis tight;
     YL = ylim;
@@ -360,13 +363,13 @@ if size(Condition,2) == 1
     xlabel('Gait cycle (%)','FontSize',8,'HorizontalAlignment','center','VerticalAlignment','Middle'); ylabel('Power (adimensioned)','FontSize',8,'HorizontalAlignment','center','VerticalAlignment','Middle'); 
     plot(1:100,zeros(100,1),'Linestyle','-','Linewidth',0.5,'Color','black');
     corridor(Norm.Kinetics.Power2.mean,Norm.Kinetics.Power2.std,[0.5 0.5 0.5]);
-    if ~isempty(Dynamics(i).R_Ankle_Power_FE.mean)
-        corridor(Dynamics(i).R_Ankle_Power_FE.mean,Dynamics(i).R_Ankle_Power_FE.std,colorR(i,:));
-        plot(Dynamics(i).R_Ankle_Power_FE.mean,'Linestyle','-','Linewidth',2,'Color',colorR(i,:));
+    if ~isempty(Dynamics.R_Ankle_Power_FE.mean)
+        corridor(Dynamics.R_Ankle_Power_FE.mean,Dynamics.R_Ankle_Power_FE.std,colorR(1,:));
+        plot(Dynamics.R_Ankle_Power_FE.mean,'Linestyle','-','Linewidth',2,'Color',colorR(1,:));
     end
-    if ~isempty(Dynamics(i).L_Ankle_Power_FE.mean)
-        corridor(Dynamics(i).L_Ankle_Power_FE.mean,Dynamics(i).L_Ankle_Power_FE.std,colorL(i,:));
-        plot(Dynamics(i).L_Ankle_Power_FE.mean,'Linestyle','-','Linewidth',2,'Color',colorL(i,:));
+    if ~isempty(Dynamics.L_Ankle_Power_FE.mean)
+        corridor(Dynamics.L_Ankle_Power_FE.mean,Dynamics.L_Ankle_Power_FE.std,colorL(1,:));
+        plot(Dynamics.L_Ankle_Power_FE.mean,'Linestyle','-','Linewidth',2,'Color',colorL(1,:));
     end
     axis tight;
     YL = ylim;
@@ -382,10 +385,10 @@ if size(Condition,2) == 1
         axes(Graph(g));
         YL = ylim;
         corridor(Norm.Event.p5.mean,Norm.Event.p5.std,[0.5 0.5 0.5]);
-        corridor(Revent(i).mean,Revent(i).std,colorR(i,:));
-        plot([Revent(i).mean Revent(i).mean],[-180 180],'Linestyle','-','Linewidth',2,'Color',colorR(i,:)); %IHS
-        corridor(Levent(i).mean,Levent(i).std,colorL(i,:));
-        plot([Levent(i).mean Levent(i).mean],[-180 180],'Linestyle','-','Linewidth',2,'Color',colorL(i,:)); %IHS
+        corridor(Revent.mean,Revent.std,colorR(1,:));
+        plot([Revent.mean Revent.mean],[-180 180],'Linestyle','-','Linewidth',2,'Color',colorR(1,:)); %IHS
+        corridor(Levent.mean,Levent.std,colorL(1,:));
+        plot([Levent.mean Levent.mean],[-180 180],'Linestyle','-','Linewidth',2,'Color',colorL(1,:)); %IHS
     end
     
     % Title
@@ -547,4 +550,9 @@ if size(Condition,2) == 1
             box on;
         end
     end
+    
+    a=annotation('textbox',[0.015 0.015 0.970 0.20],'FontSize',14,'HorizontalAlignment','center','String','Test',...
+        'FontName','Helvetica','FontWeight','bold','Color',[0 0 0],'BackgroundColor','none','EdgeColor',[0 0 0],...
+        'LineStyle','-','LineWidth',0.5000,'Units','normalized');
+
 end
