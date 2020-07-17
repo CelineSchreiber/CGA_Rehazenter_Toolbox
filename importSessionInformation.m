@@ -207,7 +207,7 @@ end
 j = 1;
 Session.Trial = [];
 for i = index_trial(1):index_trial(end)
-    if ~isnan(temp1{i,4})                                                  % If no condition is defined, the file is not used
+    if ~isnan(temp1{i,11})                                                  % If trial has not been tracked, the file is not used
         Session.Trial(j).filename = [temp1{i,1},'.c3d'];
         Session.Trial(j).s(1,1) = temp1{i,2};                              % Column 1: right foot, column2: left foot
         Session.Trial(j).s(1,2) = temp1{i,3};                              % No GRF: 0, GRF on forceplate1: 1, GRF onf forceplate2: 2

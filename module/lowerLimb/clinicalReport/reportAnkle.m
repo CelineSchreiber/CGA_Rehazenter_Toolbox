@@ -103,7 +103,7 @@ if size(Condition,2) == 1
     a=annotation('textbox',[0.015 0.925 0.970 0.06],'BackgroundColor','none','EdgeColor',[0 0 0],...
         'LineStyle','-','LineWidth',0.5000,'Units','normalized');
     cd(pluginFolder);
-    banner = imread('banner','png');
+    banner = imread('banner.png');
     axesImage = axes('position',...
         [0.05 0.93 0.2 0.0502]);
     image(banner);
@@ -122,7 +122,7 @@ if size(Condition,2) == 1
     y = y - yincr;
     text(0.5/pageWidth,y/pageHeight,...
         'Laboratoire d''Analyse du Mouvement et de la Posture',...
-        'Color','k','FontSize',11);
+        'Color','k','FontSize',10);
     
     % Patient
     % ---------------------------------------------------------------------
@@ -131,17 +131,17 @@ if size(Condition,2) == 1
     set(axesLegend,'Position',[0 0 1 1]);
     set(axesLegend,'Visible','Off');
     text(0.05,y/pageHeight,'Patient : ','FontWeight','Bold','Color','black');
-    text(0.25,y/pageHeight,[Patient(1).lastname,' ',Patient(1).firstname],'Color','black');
+    text(0.22,y/pageHeight,[Patient(1).lastname,' ',Patient(1).firstname],'Color','black');
     y = y - yincr;
     text(0.05,y/pageHeight,'Date de naissance : ','FontWeight','Bold','Color','black');
-    text(0.25,y/pageHeight,[Patient(1).birthdate],'Color','black');
+    text(0.22,y/pageHeight,[Patient(1).birthdate],'Color','black');
     
     % Legend
     % ---------------------------------------------------------------------
     y = y + yincr;
-    text(0.45,y/pageHeight,'Date AQM : ','FontWeight','Bold','Color','black');
-    text(0.55,y/pageHeight,[char(Session(1).date)],'Color','black');
-    text(0.70,y/pageHeight,['Condition : ',char(regexprep(Condition(1).name,'_','-')),' (cf page 1)'],'Color','black');
+    text(0.40,y/pageHeight,'Date AQM : ','FontWeight','Bold','Color','black');
+    text(0.50,y/pageHeight,[char(Session(1).date)],'Color','black');
+    text(0.65,y/pageHeight,['Condition : ',char(regexprep(Condition(1).name,'_','-')),' (cf page 1)'],'Color','black');
     y = y - yincr;
     % Count the number of trials
     nbtrials = 0;
@@ -151,11 +151,11 @@ if size(Condition,2) == 1
         end
     end
     % Write the legend
-    text(0.45,y/pageHeight,'Nb essais : ','Color','black');
-    text(0.55,y/pageHeight,num2str(nbtrials),'Color','black'); 
-    text(0.70,y/pageHeight,'Droite','Color',colorR(1,:));
-    text(0.80,y/pageHeight,'Gauche','Color',colorL(1,:));
-    text(0.90,y/pageHeight,'Norme','Color',[0.5 0.5 0.5]);
+    text(0.40,y/pageHeight,'Nb essais : ','Color','black');
+    text(0.50,y/pageHeight,num2str(nbtrials),'Color','black'); 
+    text(0.65,y/pageHeight,'Droite','Color',colorR(1,:));
+    text(0.75,y/pageHeight,'Gauche','Color',colorL(1,:));
+    text(0.85,y/pageHeight,'Norme','Color',[0.5 0.5 0.5]);
     y = y - yincr*1.2;
     
     % Title
@@ -165,7 +165,7 @@ if size(Condition,2) == 1
     set(axesText,'Visible','Off');
     y = y - yincr*1.5;
     text(0.02,y/pageHeight,...
-        '  Cinématique',...
+        '  Cinématique de la cheville et du pied ',...
         'Color','k','FontWeight','Bold','FontSize',14,...
         'HorizontalAlignment','Center');
     
@@ -173,8 +173,7 @@ if size(Condition,2) == 1
     % ---------------------------------------------------------------------
     y = y - yincr*6.5;
     axesGraph = axes;
-    set(axesGraph,'Position',[0 0 1 1]);
-    set(axesGraph,'Visible','Off');
+    set(axesGraph,'Position',[0 0 1 1],'Visible','Off');
     Graph(igraph) = axes('position',[x(1)/pageWidth y/pageHeight ...
         graphWidth/pageWidth graphHeight/pageHeight]);
     set(Graph(igraph),'FontSize',8,'YGrid','on','XTick',[0 25 50 75 100],'YTick',-100:10:100);
@@ -312,72 +311,74 @@ if size(Condition,2) == 1
     box on;
     igraph = igraph+1;
     
-    % Title
-    % ---------------------------------------------------------------------
-    axesText = axes;
-    set(axesText,'Position',[0.47 0 1 1]);
-    set(axesText,'Visible','Off');
-    y = y - yincr*3;
-    text(0.02,y/pageHeight,'  Cinétique','Color','k','FontWeight','Bold','FontSize',14,'HorizontalAlignment','Center');
-    
-    % Right/Left ankle flexion/extension moment
-    % ---------------------------------------------------------------------
-    y = y - yincr*6.5;
-    axesGraph = axes;
-    set(axesGraph,'Position',[0 0 1 1]);
-    set(axesGraph,'Visible','Off');
-    Graph(igraph) = axes('position',[x(1)/pageWidth y/pageHeight ...
-        graphWidth/pageWidth graphHeight/pageHeight]);
-    set(Graph(igraph),'FontSize',8,'YGrid','on','XTick',[0 25 50 75 100],'YTick',-10:0.05:10);
-    hold on;
-    title('Ankle flexion/extension moment (Dorsi+)','FontWeight','Bold');
-    xlabel('Gait cycle (%)','FontSize',8,'HorizontalAlignment','center','VerticalAlignment','Middle'); ylabel('Moment (adimensioned)','FontSize',8,'HorizontalAlignment','center','VerticalAlignment','Middle'); 
-    plot(1:100,zeros(100,1),'Linestyle','-','Linewidth',0.5,'Color','black');
-    corridor(Norm.Kinetics.FE2.mean,Norm.Kinetics.FE2.std,[0.5 0.5 0.5]);
-    if ~isempty(Dynamics.R_Ankle_Moment_FE.mean)
-        corridor(Dynamics.R_Ankle_Moment_FE.mean,Dynamics.R_Ankle_Moment_FE.std,colorR(1,:));
-        plot(Dynamics.R_Ankle_Moment_FE.mean,'Linestyle','-','Linewidth',2,'Color',colorR(1,:));
+    if ~isempty(Jkinematics.L_Hip_Angle_FE.mean)
+        
+        % Title
+        % ---------------------------------------------------------------------
+        axesText = axes;
+        set(axesText,'Position',[0.47 0 1 1]);
+        set(axesText,'Visible','Off');
+        y = y - yincr*3;
+        text(0.02,y/pageHeight,'  Cinétique','Color','k','FontWeight','Bold','FontSize',14,'HorizontalAlignment','Center');
+
+        % Right/Left ankle flexion/extension moment
+        % ---------------------------------------------------------------------
+        y = y - yincr*6.5;
+        axesGraph = axes;
+        set(axesGraph,'Position',[0 0 1 1]);
+        set(axesGraph,'Visible','Off');
+        Graph(igraph) = axes('position',[x(1)/pageWidth y/pageHeight ...
+            graphWidth/pageWidth graphHeight/pageHeight]);
+        set(Graph(igraph),'FontSize',8,'YGrid','on','XTick',[0 25 50 75 100],'YTick',-10:0.05:10);
+        hold on;
+        title('Ankle flexion/extension moment (Dorsi+)','FontWeight','Bold');
+        xlabel('Gait cycle (%)','FontSize',8,'HorizontalAlignment','center','VerticalAlignment','Middle'); ylabel('Moment (adimensioned)','FontSize',8,'HorizontalAlignment','center','VerticalAlignment','Middle'); 
+        plot(1:100,zeros(100,1),'Linestyle','-','Linewidth',0.5,'Color','black');
+        corridor(Norm.Kinetics.FE2.mean,Norm.Kinetics.FE2.std,[0.5 0.5 0.5]);
+        if ~isempty(Dynamics.R_Ankle_Moment_FE.mean)
+            corridor(Dynamics.R_Ankle_Moment_FE.mean,Dynamics.R_Ankle_Moment_FE.std,colorR(1,:));
+            plot(Dynamics.R_Ankle_Moment_FE.mean,'Linestyle','-','Linewidth',2,'Color',colorR(1,:));
+        end
+        if ~isempty(Dynamics.L_Ankle_Moment_FE.mean)
+            corridor(Dynamics.L_Ankle_Moment_FE.mean,Dynamics.L_Ankle_Moment_FE.std,colorL(1,:));
+            plot(Dynamics.L_Ankle_Moment_FE.mean,'Linestyle','-','Linewidth',2,'Color',colorL(1,:));
+        end
+        axis tight;
+        YL = ylim;
+        YL = setAxisLim(YL,-0.20,0.05);
+        axis([0 100 -.2 .2]);
+    %     axis([0 100 YL(1) YL(2)]);
+        box on;
+        igraph = igraph+1;
+
+        % Right/Left ankle flexion/extension power
+        % ---------------------------------------------------------------------
+        axesGraph = axes;
+        set(axesGraph,'Position',[0 0 1 1]);
+        set(axesGraph,'Visible','Off');
+        Graph(igraph) = axes('position',[x(2)/pageWidth y/pageHeight ...
+            graphWidth/pageWidth graphHeight/pageHeight]);
+        set(Graph(igraph),'FontSize',8,'YGrid','on','XTick',[0 25 50 75 100],'YTick',-10:0.2:10);
+        hold on;
+        title('Ankle flexion/extension power (Flex+)','FontWeight','Bold');
+        xlabel('Gait cycle (%)','FontSize',8,'HorizontalAlignment','center','VerticalAlignment','Middle'); ylabel('Power (adimensioned)','FontSize',8,'HorizontalAlignment','center','VerticalAlignment','Middle'); 
+        plot(1:100,zeros(100,1),'Linestyle','-','Linewidth',0.5,'Color','black');
+        corridor(Norm.Kinetics.Power2.mean,Norm.Kinetics.Power2.std,[0.5 0.5 0.5]);
+        if ~isempty(Dynamics.R_Ankle_Power_FE.mean)
+            corridor(Dynamics.R_Ankle_Power_FE.mean,Dynamics.R_Ankle_Power_FE.std,colorR(1,:));
+            plot(Dynamics.R_Ankle_Power_FE.mean,'Linestyle','-','Linewidth',2,'Color',colorR(1,:));
+        end
+        if ~isempty(Dynamics.L_Ankle_Power_FE.mean)
+            corridor(Dynamics.L_Ankle_Power_FE.mean,Dynamics.L_Ankle_Power_FE.std,colorL(1,:));
+            plot(Dynamics.L_Ankle_Power_FE.mean,'Linestyle','-','Linewidth',2,'Color',colorL(1,:));
+        end
+        axis tight;
+        YL = ylim;
+        YL = setAxisLim(YL,-0.2,1.2);
+        axis([0 100 -1 1]);
+        box on;
+    %     igraph = igraph+1;
     end
-    if ~isempty(Dynamics.L_Ankle_Moment_FE.mean)
-        corridor(Dynamics.L_Ankle_Moment_FE.mean,Dynamics.L_Ankle_Moment_FE.std,colorL(1,:));
-        plot(Dynamics.L_Ankle_Moment_FE.mean,'Linestyle','-','Linewidth',2,'Color',colorL(1,:));
-    end
-    axis tight;
-    YL = ylim;
-    YL = setAxisLim(YL,-0.20,0.05);
-    axis([0 100 -.2 .2]);
-%     axis([0 100 YL(1) YL(2)]);
-    box on;
-    igraph = igraph+1;
-    
-    % Right/Left ankle flexion/extension power
-    % ---------------------------------------------------------------------
-    axesGraph = axes;
-    set(axesGraph,'Position',[0 0 1 1]);
-    set(axesGraph,'Visible','Off');
-    Graph(igraph) = axes('position',[x(2)/pageWidth y/pageHeight ...
-        graphWidth/pageWidth graphHeight/pageHeight]);
-    set(Graph(igraph),'FontSize',8,'YGrid','on','XTick',[0 25 50 75 100],'YTick',-10:0.2:10);
-    hold on;
-    title('Ankle flexion/extension power (Flex+)','FontWeight','Bold');
-    xlabel('Gait cycle (%)','FontSize',8,'HorizontalAlignment','center','VerticalAlignment','Middle'); ylabel('Power (adimensioned)','FontSize',8,'HorizontalAlignment','center','VerticalAlignment','Middle'); 
-    plot(1:100,zeros(100,1),'Linestyle','-','Linewidth',0.5,'Color','black');
-    corridor(Norm.Kinetics.Power2.mean,Norm.Kinetics.Power2.std,[0.5 0.5 0.5]);
-    if ~isempty(Dynamics.R_Ankle_Power_FE.mean)
-        corridor(Dynamics.R_Ankle_Power_FE.mean,Dynamics.R_Ankle_Power_FE.std,colorR(1,:));
-        plot(Dynamics.R_Ankle_Power_FE.mean,'Linestyle','-','Linewidth',2,'Color',colorR(1,:));
-    end
-    if ~isempty(Dynamics.L_Ankle_Power_FE.mean)
-        corridor(Dynamics.L_Ankle_Power_FE.mean,Dynamics.L_Ankle_Power_FE.std,colorL(1,:));
-        plot(Dynamics.L_Ankle_Power_FE.mean,'Linestyle','-','Linewidth',2,'Color',colorL(1,:));
-    end
-    axis tight;
-    YL = ylim;
-    YL = setAxisLim(YL,-0.2,1.2);
-    axis([0 100 -1 1]);
-%     axis([0 100 YL(1) YL(2)]);
-    box on;
-%     igraph = igraph+1;
     
     % Events
     % ---------------------------------------------------------------------
@@ -391,66 +392,88 @@ if size(Condition,2) == 1
         plot([Levent.mean Levent.mean],[-180 180],'Linestyle','-','Linewidth',2,'Color',colorL(1,:)); %IHS
     end
     
-    % Title
-    % ---------------------------------------------------------------------
-    axesText = axes;
-    set(axesText,'Position',[0.47 0 1 1]);
-    set(axesText,'Visible','Off');
-    y = y - yincr*3;
-    text(0.02,y/pageHeight,...
-        '  EMG','Color','k','FontWeight','Bold','FontSize',14,'HorizontalAlignment','Center');
-    
     % EMG %
-    %------
-    x = [1.50 7.5 11.50 17.50];
-    y = y - yincr*5;
-    y1=y;
+    %----------------------------------------------------------------------
     if ~isempty(Condition(icondition).Trial(itrial).LowerLimb.EMG)
-        % Get recorded EMG for right side
-        % ---------------------------------------------------------------------
-        Remg_raw = nan(90000,8); % 1min maximum as EMG recording (1500Hz * 60s)
-        Remg_filt = nan(101,8); % normalized data
-        Remg_name = [];
+        % Title & page settings
+        % -----------------------------------------------------------------
+        axesText = axes;
+        set(axesText,'Position',[0.47 0 1 1]);
+        set(axesText,'Visible','Off');
+        y = y - yincr*3;
+        text(0.02,y/pageHeight,...
+            '  EMG','Color','k','FontWeight','Bold','FontSize',14,'HorizontalAlignment','Center');
+        x = [1.50 7.5 11.50 17.50];
+        y = y - yincr*5;
+        y1=y;
+
         names = fieldnames(Condition(icondition).Trial(itrial).LowerLimb.EMG);
-        k1 = 1;
-        k2 = 1;
-        for j = 1:length(names)
-            if ~isempty(strfind(names{j},'R_tibialis_anterior_Raw')) | ~isempty(strfind(names{j},'R_soleus_Raw')) | ~isempty(strfind(names{j},'R_gastrocnemius_medialis_Raw'))
-                Remg_raw(1:size(Condition(icondition).Trial(itrial).LowerLimb.EMG.(names{j}),1),k1) = ...
-                    Condition(icondition).Trial(itrial).LowerLimb.EMG.(names{j});
-                Remg_name{k1} = regexprep(names{j},'_Raw','');
-                k1 = k1+1;
+        n=0;
+        % Get recorded EMG 
+        % ---------------------------------------------------------------------    
+        if ~isempty(strfind(names{j},'R_'))
+            n=n+1;
+            Remg_raw = nan(90000,8); % 1min maximum as EMG recording (1500Hz * 60s)
+            Remg_filt = nan(101,8); % normalized data
+            Remg_name = [];
+            k1 = 1;
+            k2 = 1;
+            for j = 1:length(names)
+                if ~isempty(strfind(names{j},'R_tibialis_anterior_Raw')) | ~isempty(strfind(names{j},'R_soleus_Raw')) | ~isempty(strfind(names{j},'R_gastrocnemius_medialis_Raw'))
+                    Remg_raw(1:size(Condition(icondition).Trial(itrial).LowerLimb.EMG.(names{j}),1),k1) = ...
+                        Condition(icondition).Trial(itrial).LowerLimb.EMG.(names{j});
+                    Remg_name{k1} = regexprep(names{j},'_Raw','');
+                    k1 = k1+1;
+                end
+                if ~isempty(strfind(names{j},'R_tibialis_anterior_Envelop')) | ~isempty(strfind(names{j},'R_soleus_Envelop')) | ~isempty(strfind(names{j},'R_gastrocnemius_medialis_Envelop'))
+                    Remg_filt.mean(1:size(Condition(icondition).Average.LowerLimb.EMG.(names{j}).mean,1),k2) = ...
+                        Condition(icondition).Average.LowerLimb.EMG.(names{j}).mean;
+                    Remg_filt.std(1:size(Condition(icondition).Average.LowerLimb.EMG.(names{j}).mean,1),k2) = ...
+                        Condition(icondition).Average.LowerLimb.EMG.(names{j}).std;
+                    k2 = k2+1;
+                end
             end
-            if ~isempty(strfind(names{j},'R_tibialis_anterior_Envelop')) | ~isempty(strfind(names{j},'R_soleus_Envelop')) | ~isempty(strfind(names{j},'R_gastrocnemius_medialis_Envelop'))
-                Remg_filt.mean(1:size(Condition(icondition).Average.LowerLimb.EMG.(names{j}).mean,1),k2) = ...
-                    Condition(icondition).Average.LowerLimb.EMG.(names{j}).mean;
-                Remg_filt.std(1:size(Condition(icondition).Average.LowerLimb.EMG.(names{j}).mean,1),k2) = ...
-                    Condition(icondition).Average.LowerLimb.EMG.(names{j}).std;
-                k2 = k2+1;
+            isize = size(find(~isnan(Remg_raw(:,1))),1);
+        elseif ~isempty(strfind(names{j},'L_'))
+            n=n+1;
+            Lemg_raw = nan(90000,8); % 1min maximum as EMG recording (1500Hz * 60s)
+            Lemg_filt = nan(101,8); % normalized data
+            Lemg_name = [];
+            k1 = 1;
+            k2 = 1;
+            for j = 1:length(names)
+                if ~isempty(strfind(names{j},'L_tibialis_anterior_Raw')) | ~isempty(strfind(names{j},'L_soleus_Raw')) | ~isempty(strfind(names{j},'L_gastrocnemius_medialis_Raw'))
+                    Lemg_raw(1:size(Condition(icondition).Trial(itrial).LowerLimb.EMG.(names{j}),1),k1) = ...
+                        Condition(icondition).Trial(itrial).LowerLimb.EMG.(names{j});
+                    Lemg_name{k1} = regexprep(names{j},'_Raw','');
+                    k1 = k1+1;
+                end
+                if ~isempty(strfind(names{j},'L_tibialis_anterior_Envelop')) | ~isempty(strfind(names{j},'L_soleus_Envelop')) | ~isempty(strfind(names{j},'L_gastrocnemius_medialis_Envelop'))
+                    Lemg_filt.mean(1:size(Condition(icondition).Average.LowerLimb.EMG.(names{j}).mean,1),k2) = ...
+                        Condition(icondition).Average.LowerLimb.EMG.(names{j}).mean;
+                    Lemg_filt.std(1:size(Condition(icondition).Average.LowerLimb.EMG.(names{j}).mean,1),k2) = ...
+                        Condition(icondition).Average.LowerLimb.EMG.(names{j}).std;
+                    k2 = k2+1;
+                end
+            end
+            if ~exist(isize)
+                isize = size(find(~isnan(Lemg_raw(:,1))),1);
             end
         end
-    
-        igraph = igraph+1;
-        isize = size(find(~isnan(Remg_raw(:,1))),1);
-        y = y1;
-        x1=x(1);
-        axesGraph = axes;
-        set(axesGraph,'Position',[0 0 1 1]);
-        set(axesGraph,'Visible','Off');
-        Graph(igraph) = axes('position',[x1/pageWidth y/pageHeight ...
-            graphWidth/pageWidth (graphHeight*2/3)/pageHeight]);
-        set(Graph(igraph),'FontSize',8,'YGrid','on','XTick',[],'YTick',-50e-4:1e-4:50e-4);
-        hold on;
-        title(regexprep(regexprep(Remg_name{1},'left_',''),'_',' '),'FontWeight','Bold');
-        ylabel('Ampl.(uV)','FontSize',8,'HorizontalAlignment','center','VerticalAlignment','Middle');
-        plot(1:isize,zeros(isize,1),'Linestyle','-','Linewidth',0.5,'Color','black');
-        plot(Remg_raw(1:isize,1),'Linestyle','-','Linewidth',0.5,'Color',colorR(1,:));
-        axis tight;
-         for j=1:2
+        
+        if n==1
+            nmaxgraph=3;
+            xi = [1.50 11.50 11.50];
+            yi = [y1 y1 y1-yincr*5];
+        elseif n==2
+            nmaxgraph=6;
+            xi = [1.50 1.50 1.50 11.50 11.50 11.50];
+            yi = [y1 y1-yincr*5 y1-yincr*10 y1 y1-yincr*5 y1-yincr*10];
+        end
+        for i=1:nmaxgraph
             igraph = igraph+1;
-            isize = size(find(~isnan(Remg_raw(:,1))),1);
-            y = y1 - yincr*(j-1)*5;
-            x1=x(3);
+            y = yi(i);
+            x1=xi(i);
             axesGraph = axes;
             set(axesGraph,'Position',[0 0 1 1]);
             set(axesGraph,'Visible','Off');
@@ -458,48 +481,35 @@ if size(Condition,2) == 1
                 graphWidth/pageWidth (graphHeight*2/3)/pageHeight]);
             set(Graph(igraph),'FontSize',8,'YGrid','on','XTick',[],'YTick',-50e-4:1e-4:50e-4);
             hold on;
-            title(regexprep(regexprep(Remg_name{j+1},'left_',''),'_',' '),'FontWeight','Bold');
             ylabel('Ampl.(uV)','FontSize',8,'HorizontalAlignment','center','VerticalAlignment','Middle');
             plot(1:isize,zeros(isize,1),'Linestyle','-','Linewidth',0.5,'Color','black');
-            plot(Remg_raw(1:isize,1),'Linestyle','-','Linewidth',0.5,'Color',colorR(1,:));
-            axis tight;
+        
         end
-    % ENVELOPPE
-        igraph = igraph+1;
-        y = y1;
-        x1=x(2);
-        axesGraph = axes;
-        set(axesGraph,'Position',[0 0 1 1]);
-        set(axesGraph,'Visible','Off');
-        Graph(igraph) = axes('position',[x1/pageWidth y/pageHeight ...
-            graphWidth/2/pageWidth (graphHeight*2/3)/pageHeight]);
-        xlabel('Gait cycle (%)','FontSize',8,'HorizontalAlignment','center','VerticalAlignment','Middle');
-        ylabel('Ampl.(%max)','FontSize',8,'HorizontalAlignment','center','VerticalAlignment','Middle');
-        hold on;
-            % Find norm
-%             inorm = [];
-%             names = fieldnames(Norm.EMG);
-%             for i = 1:length(names)
-%                 if strfind(regexprep(names{i},'right_',''),regexprep(Remg_name{g},'right_',''))
-%                     inorm = Norm.EMG.(names{i});
-%                 end
-%             end
-%             % Plot
-%             if ~isempty(inorm)
-%                 plot(inorm.mean(1:101,1)/max(inorm.mean(1:101,1)),'Linestyle','-','Linewidth',2,'Color',[0.5 0.5 0.5]);
-%             end
-        plot(Remg_filt.mean(1:101,j)/max(Remg_filt.mean(1:101,1)),'Linestyle','-','Linewidth',2,'Color',colorR(1,:));
-        set(Graph(igraph),'FontSize',8,'YGrid','on','XTick',[0:50:100],'YTick',0:0.25:1,'YTickLabel',{'0' '25' '50' '75' '100'});
+        plot(Remg_raw(1:isize,1),'Linestyle','-','Linewidth',0.5,'Color',colorR(1,:));
+        title(regexprep(regexprep(Remg_name{1},'left_',''),'_',' '),'FontWeight','Bold');
         axis tight;
-        axis([0 100 0 1]);
-        plot([Condition(icondition).Trial(itrial).LowerLimb.Spatiotemporal.R_Stance_Phase ...
-            Condition(icondition).Trial(itrial).LowerLimb.Spatiotemporal.R_Stance_Phase],...
-            [0 1],'Linestyle','--','Linewidth',1,'Color','black');
-        box on;
-        for j=1:2
+             for j=1:2
+                igraph = igraph+1;
+                isize = size(find(~isnan(Remg_raw(:,1))),1);
+                y = y1 - yincr*(j-1)*5;
+                x1=x(3);
+                axesGraph = axes;
+                set(axesGraph,'Position',[0 0 1 1]);
+                set(axesGraph,'Visible','Off');
+                Graph(igraph) = axes('position',[x1/pageWidth y/pageHeight ...
+                    graphWidth/pageWidth (graphHeight*2/3)/pageHeight]);
+                set(Graph(igraph),'FontSize',8,'YGrid','on','XTick',[],'YTick',-50e-4:1e-4:50e-4);
+                hold on;
+                title(regexprep(regexprep(Remg_name{j+1},'left_',''),'_',' '),'FontWeight','Bold');
+                ylabel('Ampl.(uV)','FontSize',8,'HorizontalAlignment','center','VerticalAlignment','Middle');
+                plot(1:isize,zeros(isize,1),'Linestyle','-','Linewidth',0.5,'Color','black');
+                plot(Remg_raw(1:isize,1),'Linestyle','-','Linewidth',0.5,'Color',colorR(1,:));
+                axis tight;
+            end
+        % ENVELOPPE
             igraph = igraph+1;
-            y = y1 - yincr*(j-1)*5;
-            x1=x(4);
+            y = y1;
+            x1=x(2);
             axesGraph = axes;
             set(axesGraph,'Position',[0 0 1 1]);
             set(axesGraph,'Visible','Off');
@@ -508,19 +518,19 @@ if size(Condition,2) == 1
             xlabel('Gait cycle (%)','FontSize',8,'HorizontalAlignment','center','VerticalAlignment','Middle');
             ylabel('Ampl.(%max)','FontSize',8,'HorizontalAlignment','center','VerticalAlignment','Middle');
             hold on;
-            % Find norm
-%             inorm = [];
-%             names = fieldnames(Norm.EMG);
-%             for i = 1:length(names)
-%                 if strfind(regexprep(names{i},'right_',''),regexprep(Remg_name{g},'right_',''))
-%                     inorm = Norm.EMG.(names{i});
-%                 end
-%             end
-%             % Plot
-%             if ~isempty(inorm)
-%                 plot(inorm.mean(1:101,1)/max(inorm.mean(1:101,1)),'Linestyle','-','Linewidth',2,'Color',[0.5 0.5 0.5]);
-%             end
-            plot(Remg_filt.mean(1:101,j)/max(Remg_filt.mean(1:101,j+1)),'Linestyle','-','Linewidth',2,'Color',colorR(1,:));
+                % Find norm
+    %             inorm = [];
+    %             names = fieldnames(Norm.EMG);
+    %             for i = 1:length(names)
+    %                 if strfind(regexprep(names{i},'right_',''),regexprep(Remg_name{g},'right_',''))
+    %                     inorm = Norm.EMG.(names{i});
+    %                 end
+    %             end
+    %             % Plot
+    %             if ~isempty(inorm)
+    %                 plot(inorm.mean(1:101,1)/max(inorm.mean(1:101,1)),'Linestyle','-','Linewidth',2,'Color',[0.5 0.5 0.5]);
+    %             end
+            plot(Remg_filt.mean(1:101,j)/max(Remg_filt.mean(1:101,1)),'Linestyle','-','Linewidth',2,'Color',colorR(1,:));
             set(Graph(igraph),'FontSize',8,'YGrid','on','XTick',[0:50:100],'YTick',0:0.25:1,'YTickLabel',{'0' '25' '50' '75' '100'});
             axis tight;
             axis([0 100 0 1]);
@@ -528,26 +538,59 @@ if size(Condition,2) == 1
                 Condition(icondition).Trial(itrial).LowerLimb.Spatiotemporal.R_Stance_Phase],...
                 [0 1],'Linestyle','--','Linewidth',1,'Color','black');
             box on;
-        end
-    
-    % Mise à échelle de tous les graphes
-        for j=igraph-5:igraph-3
-            axes(Graph(j));
-            YL = [-2e-4,2e-4];
-            XL = xlim;
-            XL(1) = max(XL(1),X_down);
-            XL(2) = min(XL(2),X_up);
-            axis([XL(1) XL(2) YL(1) YL(2)]);
-            plot([Condition(icondition).Trial(itrial).LowerLimb.Events.e.RHS(1)*Session(icondition).frq.fAnalog ...
-                Condition(icondition).Trial(itrial).LowerLimb.Events.e.RHS(1)*Session(icondition).frq.fAnalog],...
-                [YL(1) YL(2)],'Linestyle','-','Linewidth',1,'Color','black');
-            plot([Condition(icondition).Trial(itrial).LowerLimb.Events.e.RTO(end)*Session(icondition).frq.fAnalog ...
-                Condition(icondition).Trial(itrial).LowerLimb.Events.e.RTO(end)*Session(icondition).frq.fAnalog],...
-                [YL(1) YL(2)],'Linestyle','--','Linewidth',1,'Color','black');
-            plot([Condition(icondition).Trial(itrial).LowerLimb.Events.e.RHS(2)*Session(icondition).frq.fAnalog ...
-                Condition(icondition).Trial(itrial).LowerLimb.Events.e.RHS(2)*Session(icondition).frq.fAnalog],...
-                [YL(1) YL(2)],'Linestyle','-','Linewidth',1,'Color','black');
-            box on;
+            for j=1:2
+                igraph = igraph+1;
+                y = y1 - yincr*(j-1)*5;
+                x1=x(4);
+                axesGraph = axes;
+                set(axesGraph,'Position',[0 0 1 1]);
+                set(axesGraph,'Visible','Off');
+                Graph(igraph) = axes('position',[x1/pageWidth y/pageHeight ...
+                    graphWidth/2/pageWidth (graphHeight*2/3)/pageHeight]);
+                xlabel('Gait cycle (%)','FontSize',8,'HorizontalAlignment','center','VerticalAlignment','Middle');
+                ylabel('Ampl.(%max)','FontSize',8,'HorizontalAlignment','center','VerticalAlignment','Middle');
+                hold on;
+                % Find norm
+    %             inorm = [];
+    %             names = fieldnames(Norm.EMG);
+    %             for i = 1:length(names)
+    %                 if strfind(regexprep(names{i},'right_',''),regexprep(Remg_name{g},'right_',''))
+    %                     inorm = Norm.EMG.(names{i});
+    %                 end
+    %             end
+    %             % Plot
+    %             if ~isempty(inorm)
+    %                 plot(inorm.mean(1:101,1)/max(inorm.mean(1:101,1)),'Linestyle','-','Linewidth',2,'Color',[0.5 0.5 0.5]);
+    %             end
+                plot(Remg_filt.mean(1:101,j)/max(Remg_filt.mean(1:101,j+1)),'Linestyle','-','Linewidth',2,'Color',colorR(1,:));
+                set(Graph(igraph),'FontSize',8,'YGrid','on','XTick',[0:50:100],'YTick',0:0.25:1,'YTickLabel',{'0' '25' '50' '75' '100'});
+                axis tight;
+                axis([0 100 0 1]);
+                plot([Condition(icondition).Trial(itrial).LowerLimb.Spatiotemporal.R_Stance_Phase ...
+                    Condition(icondition).Trial(itrial).LowerLimb.Spatiotemporal.R_Stance_Phase],...
+                    [0 1],'Linestyle','--','Linewidth',1,'Color','black');
+                box on;
+            end
+
+        % Mise à échelle de tous les graphes
+            for j=igraph-5:igraph-3
+                axes(Graph(j));
+                YL = [-2e-4,2e-4];
+                XL = xlim;
+                XL(1) = max(XL(1),X_down);
+                XL(2) = min(XL(2),X_up);
+                axis([XL(1) XL(2) YL(1) YL(2)]);
+                plot([Condition(icondition).Trial(itrial).LowerLimb.Events.e.RHS(1)*Session(icondition).frq.fAnalog ...
+                    Condition(icondition).Trial(itrial).LowerLimb.Events.e.RHS(1)*Session(icondition).frq.fAnalog],...
+                    [YL(1) YL(2)],'Linestyle','-','Linewidth',1,'Color','black');
+                plot([Condition(icondition).Trial(itrial).LowerLimb.Events.e.RTO(end)*Session(icondition).frq.fAnalog ...
+                    Condition(icondition).Trial(itrial).LowerLimb.Events.e.RTO(end)*Session(icondition).frq.fAnalog],...
+                    [YL(1) YL(2)],'Linestyle','--','Linewidth',1,'Color','black');
+                plot([Condition(icondition).Trial(itrial).LowerLimb.Events.e.RHS(2)*Session(icondition).frq.fAnalog ...
+                    Condition(icondition).Trial(itrial).LowerLimb.Events.e.RHS(2)*Session(icondition).frq.fAnalog],...
+                    [YL(1) YL(2)],'Linestyle','-','Linewidth',1,'Color','black');
+                box on;
+            end
         end
     end
     

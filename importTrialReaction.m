@@ -27,7 +27,7 @@ for j = 1:size(Forceplate,1)
     temp = Grf(j).M(:,2); temp(isnan(temp)) = 0; Grf(j).M(:,2) = temp;
     temp = Grf(j).M(:,3); temp(isnan(temp)) = 0; Grf(j).M(:,3) = temp;
     % Low pass filter (Butterworth 4nd order, 15 Hz)
-    [B,A] = butter(4,15/(fAnalog/2),'low');
+    [B,A] = butter(2,15/(fAnalog/2),'low'); %4?
     tGrf(j).F(:,1) = filtfilt(B,A,tGrf(j).F(:,1));
     tGrf(j).F(:,2) = filtfilt(B,A,tGrf(j).F(:,2));
     tGrf(j).F(:,3) = filtfilt(B,A,tGrf(j).F(:,3));
@@ -41,7 +41,7 @@ for j = 1:size(Forceplate,1)
     Grf(j).M(:,2) = filtfilt(B,A,Grf(j).M(:,2));
     Grf(j).M(:,3) = filtfilt(B,A,Grf(j).M(:,3));
     % Apply a 5N threshold
-    threshold = 50;
+    threshold = 10; %50?
     for k = 1:length(tGrf(j).F)
         if tGrf(j).F(k,3) < threshold  % vertical tGrf threshold
             tGrf(j).P(k,:) = zeros(1,3);

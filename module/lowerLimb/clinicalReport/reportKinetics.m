@@ -477,12 +477,12 @@ if size(Condition,2) == 1
     plot(1:100,zeros(100,1),'Linestyle','-','Linewidth',0.5,'Color','black');
     corridor(Norm.Kinetics.LM1.mean,Norm.Kinetics.LM1.std,[0.5 0.5 0.5]);  % Relaunch norm and correct sign here
     if ~isempty(Dynamics(i).R_GRF_Z.mean)
-        corridor(-Dynamics(i).R_GRF_Z.mean,Dynamics(i).R_GRF_Z.std,colorR(i,:));
-        plot(-Dynamics(i).R_GRF_Z.mean,'Linestyle','-','Linewidth',2,'Color',colorR(i,:));
+        corridor(Dynamics(i).R_GRF_Z.mean,Dynamics(i).R_GRF_Z.std,colorR(i,:));
+        plot(Dynamics(i).R_GRF_Z.mean,'Linestyle','-','Linewidth',2,'Color',colorR(i,:));
     end
     if ~isempty(Dynamics(i).L_GRF_Z.mean)
-        corridor(Dynamics(i).L_GRF_Z.mean,Dynamics(i).L_GRF_Z.std,colorL(i,:));
-        plot(Dynamics(i).L_GRF_Z.mean,'Linestyle','-','Linewidth',2,'Color',colorL(i,:));
+        corridor(-Dynamics(i).L_GRF_Z.mean,Dynamics(i).L_GRF_Z.std,colorL(i,:));
+        plot(-Dynamics(i).L_GRF_Z.mean,'Linestyle','-','Linewidth',2,'Color',colorL(i,:));
     end
     axis tight;
     YL = ylim;
@@ -497,7 +497,7 @@ if size(Condition,2) == 1
         axes(Graph(g));
         YL = ylim;
         corridor(Norm.Event.p5.mean,Norm.Event.p5.std,[0.5 0.5 0.5]);
-        corridor(Revent(i).p5.mean,Revent(i).p5.std,colorR(i,:));
+        corridor(Revent(i).mean,Revent(i).std,colorR(i,:));
         plot([Revent(i).mean Revent(i).mean],[-180 180],'Linestyle','-','Linewidth',2,'Color',colorR(i,:)); %IHS
         corridor(Levent(i).mean,Levent(i).std,colorL(i,:));
         plot([Levent(i).mean Levent(i).mean],[-180 180],'Linestyle','-','Linewidth',2,'Color',colorL(i,:)); %IHS

@@ -46,18 +46,18 @@ disp(' ');
 % =========================================================================
 % Set patient folder
 % =========================================================================
-sessionFolder = 'C:\Users\celine.schreiber\Documents\MATLAB\CGA_Rehazenter_Toolbox\example\patient2';
+sessionFolder = 'C:\Users\celine.schreiber\Documents\MATLAB\CGA_Rehazenter_Toolbox\example\patient3';
 patientFolder = sessionFolder;
 
 % =========================================================================
 % Start Clinical Gait Analysis
 % =========================================================================
-startCGA(toolboxFolder,sessionFolder,patientFolder);
+% startCGA(toolboxFolder,sessionFolder,patientFolder);
 
 % =========================================================================
 % Matlab Reporting tool
 % =========================================================================
-startClinicalReport_lowerLimb()
+startClinicalReport_lowerLimb2()
 
 % =========================================================================
 % Excel Reporting tool

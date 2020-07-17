@@ -243,185 +243,188 @@ end
 % =========================================================================
 % Dynamics
 % =========================================================================
+den_normF = 9.81*Session.weight;
+den_normM = 9.81*Session.weight*(Session.R_legLength+Session.L_legLength)/2;
+den_normP = 9.81^(1/2)*Session.weight*((Session.R_legLength+Session.L_legLength)/2)^(3/2);
 % Right gait cycle
 if sum(isnan(Joint(2).Mj(1,:,:))) ~= size(isnan(Joint(2).Mj(1,:,:)),3)
     Output.Dynamics.R_Ankle_Moment_FE = interp1(R_k,...
-        permute(Joint(2).Mj(1,:,mRHS(1):mRHS(2))/Session.weight,[3,1,2]),R_ko,'spline');
+        permute(Joint(2).Mj(1,:,mRHS(1):mRHS(2))/den_normM,[3,1,2]),R_ko,'spline');
 else
     Output.Dynamics.R_Ankle_Moment_FE = NaN(101,1);
 end
 if sum(isnan(Joint(2).Mj(1,:,:))) ~= size(isnan(Joint(2).Mj(1,:,:)),3)
     Output.Dynamics.R_Ankle_Power_FE = interp1(R_k,...
-        permute(Joint(2).power(1,:,mRHS(1):mRHS(2))/Session.weight,[3,1,2]),R_ko,'spline');
+        permute(Joint(2).power(1,:,mRHS(1):mRHS(2))/den_normM,[3,1,2]),R_ko,'spline');
 else
     Output.Dynamics.R_Ankle_Power_FE = NaN(101,1);
 end
 if sum(isnan(Joint(2).Mj(3,:,:))) ~= size(isnan(Joint(2).Mj(3,:,:)),3)
     Output.Dynamics.R_Ankle_Moment_AA = interp1(R_k,...
-        permute(Joint(2).Mj(3,:,mRHS(1):mRHS(2)),[3,1,2])/Session.weight,R_ko,'spline');
+        permute(Joint(2).Mj(3,:,mRHS(1):mRHS(2))/den_normM,[3,1,2]),R_ko,'spline');
 else
     Output.Dynamics.R_Ankle_Moment_AA = NaN(101,1);
 end
 if sum(isnan(Joint(2).Mj(2,:,:))) ~= size(isnan(Joint(2).Mj(2,:,:)),3)
     Output.Dynamics.R_Ankle_Moment_IER = interp1(R_k,...
-        permute(Joint(2).Mj(2,:,mRHS(1):mRHS(2)),[3,1,2])/Session.weight,R_ko,'spline');
+        permute(Joint(2).Mj(2,:,mRHS(1):mRHS(2))/den_normM,[3,1,2]),R_ko,'spline');
 else
     Output.Dynamics.R_Ankle_Moment_IER = NaN(101,1);
 end
 if sum(isnan(Joint(3).Mj(1,:,:))) ~= size(isnan(Joint(3).Mj(1,:,:)),3)
     Output.Dynamics.R_Knee_Moment_FE = interp1(R_k,...
-        permute(Joint(3).Mj(1,:,mRHS(1):mRHS(2)),[3,1,2])/Session.weight,R_ko,'spline');
+        permute(-Joint(3).Mj(1,:,mRHS(1):mRHS(2))/den_normM,[3,1,2]),R_ko,'spline');
 else
     Output.Dynamics.R_Knee_Moment_FE = NaN(101,1);
 end
 if sum(isnan(Joint(3).Mj(1,:,:))) ~= size(isnan(Joint(3).Mj(1,:,:)),3)
     Output.Dynamics.R_Knee_Power_FE = interp1(R_k,...
-        permute(Joint(3).power(1,:,mRHS(1):mRHS(2)),[3,1,2])/Session.weight,R_ko,'spline');
+        permute(Joint(3).power(1,:,mRHS(1):mRHS(2))/den_normP,[3,1,2]),R_ko,'spline');
 else
     Output.Dynamics.R_Knee_Power_FE = NaN(101,1);
 end
 if sum(isnan(Joint(3).Mj(2,:,:))) ~= size(isnan(Joint(3).Mj(2,:,:)),3)
     Output.Dynamics.R_Knee_Moment_AA = interp1(R_k,...
-        permute(Joint(3).Mj(2,:,mRHS(1):mRHS(2)),[3,1,2])/Session.weight,R_ko,'spline');
+        permute(Joint(3).Mj(2,:,mRHS(1):mRHS(2))/den_normM,[3,1,2]),R_ko,'spline');
 else
     Output.Dynamics.R_Knee_Moment_AA = NaN(101,1);
 end
 if sum(isnan(Joint(3).Mj(3,:,:))) ~= size(isnan(Joint(3).Mj(3,:,:)),3)
     Output.Dynamics.R_Knee_Moment_IER = interp1(R_k,...
-        permute(Joint(3).Mj(3,:,mRHS(1):mRHS(2)),[3,1,2])/Session.weight,R_ko,'spline');
+        permute(Joint(3).Mj(3,:,mRHS(1):mRHS(2))/den_normM,[3,1,2]),R_ko,'spline');
 else
     Output.Dynamics.R_Knee_Moment_IER = NaN(101,1);
 end
 if sum(isnan(Joint(4).Mj(1,:,:))) ~= size(isnan(Joint(4).Mj(1,:,:)),3)
     Output.Dynamics.R_Hip_Moment_FE = interp1(R_k,...
-        permute(Joint(4).Mj(1,:,mRHS(1):mRHS(2)),[3,1,2])/Session.weight,R_ko,'spline');
+        permute(Joint(4).Mj(1,:,mRHS(1):mRHS(2))/den_normM,[3,1,2]),R_ko,'spline');
 else
     Output.Dynamics.R_Hip_Moment_FE = NaN(101,1);
 end
 if sum(isnan(Joint(4).Mj(1,:,:))) ~= size(isnan(Joint(4).Mj(1,:,:)),3)
     Output.Dynamics.R_Hip_Power_FE = interp1(R_k,...
-        permute(Joint(4).power(1,:,mRHS(1):mRHS(2)),[3,1,2])/Session.weight,R_ko,'spline');
+        permute(Joint(4).power(1,:,mRHS(1):mRHS(2))/den_normP,[3,1,2]),R_ko,'spline');
 else
     Output.Dynamics.R_Hip_Power_FE = NaN(101,1);
 end
 if sum(isnan(Joint(4).Mj(2,:,:))) ~= size(isnan(Joint(4).Mj(2,:,:)),3)
     Output.Dynamics.R_Hip_Moment_AA = interp1(R_k,...
-        permute(Joint(4).Mj(2,:,mRHS(1):mRHS(2)),[3,1,2])/Session.weight,R_ko,'spline');
+        permute(Joint(4).Mj(2,:,mRHS(1):mRHS(2))/den_normM,[3,1,2]),R_ko,'spline');
 else
     Output.Dynamics.R_Hip_Moment_AA = NaN(101,1);
 end
 if sum(isnan(Joint(4).Mj(3,:,:))) ~= size(isnan(Joint(4).Mj(3,:,:)),3)
     Output.Dynamics.R_Hip_Moment_IER = interp1(R_k,...
-        permute(Joint(4).Mj(3,:,mRHS(1):mRHS(2)),[3,1,2])/Session.weight,R_ko,'spline');
+        permute(Joint(4).Mj(3,:,mRHS(1):mRHS(2))/den_normM,[3,1,2]),R_ko,'spline');
 else
     Output.Dynamics.R_Hip_Moment_IER = NaN(101,1);
 end
 if sum(isnan(Joint(1).F(1,:,:))) ~= size(isnan(Joint(1).F(1,:,:)),3)
     Output.Dynamics.R_GRF_X = interp1(R_k,...
-        permute(Joint(1).F(1,:,mRHS(1):mRHS(2)),[3,1,2])/Session.weight,R_ko,'spline');
+        permute(Joint(1).F(1,:,mRHS(1):mRHS(2)),[3,1,2])/den_normF,R_ko,'spline');
 else
     Output.Dynamics.R_GRF_X = NaN(101,1);
 end
 if sum(isnan(Joint(1).F(2,:,:))) ~= size(isnan(Joint(1).F(2,:,:)),3)
     Output.Dynamics.R_GRF_Y = interp1(R_k,...
-        permute(Joint(1).F(2,:,mRHS(1):mRHS(2)),[3,1,2])/Session.weight,R_ko,'spline');
+        permute(Joint(1).F(2,:,mRHS(1):mRHS(2)),[3,1,2])/den_normF,R_ko,'spline');
 else
     Output.Dynamics.R_GRF_Y = NaN(101,1);
 end
 if sum(isnan(Joint(1).F(3,:,:))) ~= size(isnan(Joint(1).F(3,:,:)),3)
     Output.Dynamics.R_GRF_Z = interp1(R_k,...
-        permute(Joint(1).F(3,:,mRHS(1):mRHS(2)),[3,1,2])/Session.weight,R_ko,'spline');
+        permute(Joint(1).F(3,:,mRHS(1):mRHS(2)),[3,1,2])/den_normF,R_ko,'spline');
 else
     Output.Dynamics.R_GRF_Z = NaN(101,1);
 end
 % Left gait cycle
 if sum(isnan(Joint(102).Mj(1,:,:))) ~= size(isnan(Joint(102).Mj(1,:,:)),3)
     Output.Dynamics.L_Ankle_Moment_FE = interp1(L_k,...
-        permute(Joint(102).Mj(1,:,mLHS(1):mLHS(2)),[3,1,2])/Session.weight,L_ko,'spline');
+        permute(-Joint(102).Mj(1,:,mLHS(1):mLHS(2)),[3,1,2])/den_normM,L_ko,'spline');
 else
     Output.Dynamics.L_Ankle_Moment_FE = NaN(101,1);
 end
 if sum(isnan(Joint(102).Mj(1,:,:))) ~= size(isnan(Joint(102).Mj(1,:,:)),3)
     Output.Dynamics.L_Ankle_Power_FE = interp1(L_k,...
-        permute(Joint(102).power(1,:,mLHS(1):mLHS(2)),[3,1,2])/Session.weight,L_ko,'spline');
+        permute(Joint(102).power(1,:,mLHS(1):mLHS(2)),[3,1,2])/den_normP,L_ko,'spline');
 else
     Output.Dynamics.L_Ankle_Power_FE = NaN(101,1);
 end
 if sum(isnan(Joint(102).Mj(3,:,:))) ~= size(isnan(Joint(102).Mj(3,:,:)),3)
     Output.Dynamics.L_Ankle_Moment_AA = interp1(L_k,...
-        permute(Joint(102).Mj(3,:,mLHS(1):mLHS(2)),[3,1,2])/Session.weight,L_ko,'spline');
+        permute(Joint(102).Mj(3,:,mLHS(1):mLHS(2)),[3,1,2])/den_normM,L_ko,'spline');
 else
     Output.Dynamics.L_Ankle_Moment_AA = NaN(101,1);
 end
 if sum(isnan(Joint(102).Mj(2,:,:))) ~= size(isnan(Joint(102).Mj(2,:,:)),3)
     Output.Dynamics.L_Ankle_Moment_IER = interp1(L_k,...
-        permute(Joint(102).Mj(2,:,mLHS(1):mLHS(2)),[3,1,2])/Session.weight,L_ko,'spline');
+        permute(Joint(102).Mj(2,:,mLHS(1):mLHS(2)),[3,1,2])/den_normM,L_ko,'spline');
 else
     Output.Dynamics.L_Ankle_Moment_IER = NaN(101,1);
 end
 if sum(isnan(Joint(103).Mj(1,:,:))) ~= size(isnan(Joint(103).Mj(1,:,:)),3)
     Output.Dynamics.L_Knee_Moment_FE = interp1(L_k,...
-        permute(Joint(103).Mj(1,:,mLHS(1):mLHS(2)),[3,1,2])/Session.weight,L_ko,'spline');
+        permute(Joint(103).Mj(1,:,mLHS(1):mLHS(2)),[3,1,2])/den_normM,L_ko,'spline');
 else
     Output.Dynamics.L_Knee_Moment_FE = NaN(101,1);
 end
 if sum(isnan(Joint(103).Mj(1,:,:))) ~= size(isnan(Joint(103).Mj(1,:,:)),3)
     Output.Dynamics.L_Knee_Power_FE = interp1(L_k,...
-        permute(Joint(103).power(1,:,mLHS(1):mLHS(2)),[3,1,2])/Session.weight,L_ko,'spline');
+        permute(Joint(103).power(1,:,mLHS(1):mLHS(2)),[3,1,2])/den_normP,L_ko,'spline');
 else
     Output.Dynamics.L_Knee_Power_FE = NaN(101,1);
 end
 if sum(isnan(Joint(103).Mj(2,:,:))) ~= size(isnan(Joint(103).Mj(2,:,:)),3)
     Output.Dynamics.L_Knee_Moment_AA = interp1(L_k,...
-        permute(Joint(103).Mj(2,:,mLHS(1):mLHS(2)),[3,1,2])/Session.weight,L_ko,'spline');
+        permute(Joint(103).Mj(2,:,mLHS(1):mLHS(2)),[3,1,2])/den_normM,L_ko,'spline');
 else
     Output.Dynamics.L_Knee_Moment_AA = NaN(101,1);
 end
 if sum(isnan(Joint(103).Mj(3,:,:))) ~= size(isnan(Joint(103).Mj(3,:,:)),3)
     Output.Dynamics.L_Knee_Moment_IER = interp1(L_k,...
-        permute(Joint(103).Mj(3,:,mLHS(1):mLHS(2)),[3,1,2])/Session.weight,L_ko,'spline');
+        permute(Joint(103).Mj(3,:,mLHS(1):mLHS(2)),[3,1,2])/den_normM,L_ko,'spline');
 else
     Output.Dynamics.L_Knee_Moment_IER = NaN(101,1);
 end
 if sum(isnan(Joint(104).Mj(1,:,:))) ~= size(isnan(Joint(104).Mj(1,:,:)),3)
     Output.Dynamics.L_Hip_Moment_FE = interp1(L_k,...
-        permute(Joint(104).Mj(1,:,mLHS(1):mLHS(2)),[3,1,2])/Session.weight,L_ko,'spline');
+        permute(-Joint(104).Mj(1,:,mLHS(1):mLHS(2)),[3,1,2])/den_normM,L_ko,'spline');
 else
     Output.Dynamics.L_Hip_Moment_FE = NaN(101,1);
 end
 if sum(isnan(Joint(104).Mj(1,:,:))) ~= size(isnan(Joint(104).Mj(1,:,:)),3)
     Output.Dynamics.L_Hip_Power_FE = interp1(L_k,...
-        permute(Joint(104).power(1,:,mLHS(1):mLHS(2)),[3,1,2])/Session.weight,L_ko,'spline');
+        permute(Joint(104).power(1,:,mLHS(1):mLHS(2)),[3,1,2])/den_normP,L_ko,'spline');
 else
     Output.Dynamics.L_Hip_Power_FE = NaN(101,1);
 end
 if sum(isnan(Joint(104).Mj(2,:,:))) ~= size(isnan(Joint(104).Mj(2,:,:)),3)
     Output.Dynamics.L_Hip_Moment_AA = interp1(L_k,...
-        permute(Joint(104).Mj(2,:,mLHS(1):mLHS(2)),[3,1,2])/Session.weight,L_ko,'spline');
+        permute(Joint(104).Mj(2,:,mLHS(1):mLHS(2)),[3,1,2])/den_normM,L_ko,'spline');
 else
     Output.Dynamics.L_Hip_Moment_AA = NaN(101,1);
 end
 if sum(isnan(Joint(104).Mj(3,:,:))) ~= size(isnan(Joint(104).Mj(3,:,:)),3)
     Output.Dynamics.L_Hip_Moment_IER = interp1(L_k,...
-        permute(Joint(104).Mj(3,:,mLHS(1):mLHS(2)),[3,1,2])/Session.weight,L_ko,'spline');
+        permute(Joint(104).Mj(3,:,mLHS(1):mLHS(2)),[3,1,2])/den_normM,L_ko,'spline');
 else
     Output.Dynamics.L_Hip_Moment_IER = NaN(101,1);
 end
 if sum(isnan(Joint(101).F(1,:,:))) ~= size(isnan(Joint(101).F(1,:,:)),3)
     Output.Dynamics.L_GRF_X = interp1(L_k,...
-        permute(Joint(101).F(1,:,mLHS(1):mLHS(2)),[3,1,2])/Session.weight,L_ko,'spline');
+        permute(Joint(101).F(1,:,mLHS(1):mLHS(2)),[3,1,2])/den_normF,L_ko,'spline');
 else
     Output.Dynamics.L_GRF_X = NaN(101,1);
 end
 if sum(isnan(Joint(101).F(2,:,:))) ~= size(isnan(Joint(101).F(2,:,:)),3)
     Output.Dynamics.L_GRF_Y = interp1(L_k,...
-        permute(Joint(101).F(2,:,mLHS(1):mLHS(2)),[3,1,2])/Session.weight,L_ko,'spline');
+        permute(Joint(101).F(2,:,mLHS(1):mLHS(2)),[3,1,2])/den_normF,L_ko,'spline');
 else
     Output.Dynamics.L_GRF_Y = NaN(101,1);
 end
 if sum(isnan(Joint(101).F(3,:,:))) ~= size(isnan(Joint(101).F(3,:,:)),3)
     Output.Dynamics.L_GRF_Z = interp1(L_k,...
-        permute(Joint(101).F(3,:,mLHS(1):mLHS(2)),[3,1,2])/Session.weight,L_ko,'spline');
+        permute(Joint(101).F(3,:,mLHS(1):mLHS(2)),[3,1,2])/den_normF,L_ko,'spline');
 else
     Output.Dynamics.L_GRF_Z = NaN(101,1);
 end
