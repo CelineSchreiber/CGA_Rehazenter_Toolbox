@@ -395,8 +395,8 @@ if size(Condition,2) == 1
     % EMG %
     %----------------------------------------------------------------------
     if ~isempty(Condition(icondition).Trial(itrial).LowerLimb.EMG)
+        
         % Title & page settings
-        % -----------------------------------------------------------------
         axesText = axes;
         set(axesText,'Position',[0.47 0 1 1]);
         set(axesText,'Visible','Off');
@@ -408,69 +408,77 @@ if size(Condition,2) == 1
         y1=y;
 
         names = fieldnames(Condition(icondition).Trial(itrial).LowerLimb.EMG);
-        n=0;
+        n=0;ngraphR=0;ngraphL=0;
+        
         % Get recorded EMG 
-        % ---------------------------------------------------------------------    
         if ~isempty(strfind(names{j},'R_'))
             n=n+1;
             Remg_raw = nan(90000,8); % 1min maximum as EMG recording (1500Hz * 60s)
             Remg_filt = nan(101,8); % normalized data
             Remg_name = [];
-            k1 = 1;
-            k2 = 1;
+            k1 = 0;
+            k2 = 0;
             for j = 1:length(names)
                 if ~isempty(strfind(names{j},'R_tibialis_anterior_Raw')) | ~isempty(strfind(names{j},'R_soleus_Raw')) | ~isempty(strfind(names{j},'R_gastrocnemius_medialis_Raw'))
-                    Remg_raw(1:size(Condition(icondition).Trial(itrial).LowerLimb.EMG.(names{j}),1),k1) = ...
-                        Condition(icondition).Trial(itrial).LowerLimb.EMG.(names{j});
-                    Remg_name{k1} = regexprep(names{j},'_Raw','');
                     k1 = k1+1;
+                    emg_raw(1:size(Condition(icondition).Trial(itrial).LowerLimb.EMG.(names{j}),1),k1) = ...
+                        Condition(icondition).Trial(itrial).LowerLimb.EMG.(names{j});
+                    emg_name{k1} = regexprep(names{j},'_Raw','');
                 end
                 if ~isempty(strfind(names{j},'R_tibialis_anterior_Envelop')) | ~isempty(strfind(names{j},'R_soleus_Envelop')) | ~isempty(strfind(names{j},'R_gastrocnemius_medialis_Envelop'))
-                    Remg_filt.mean(1:size(Condition(icondition).Average.LowerLimb.EMG.(names{j}).mean,1),k2) = ...
-                        Condition(icondition).Average.LowerLimb.EMG.(names{j}).mean;
-                    Remg_filt.std(1:size(Condition(icondition).Average.LowerLimb.EMG.(names{j}).mean,1),k2) = ...
-                        Condition(icondition).Average.LowerLimb.EMG.(names{j}).std;
                     k2 = k2+1;
+                    emg_filt.mean(1:size(Condition(icondition).Average.LowerLimb.EMG.(names{j}).mean,1),k2) = ...
+                        Condition(icondition).Average.LowerLimb.EMG.(names{j}).mean;
+                    emg_filt.std(1:size(Condition(icondition).Average.LowerLimb.EMG.(names{j}).mean,1),k2) = ...
+                        Condition(icondition).Average.LowerLimb.EMG.(names{j}).std;
                 end
             end
-            isize = size(find(~isnan(Remg_raw(:,1))),1);
+            ngraphR=k1;
         elseif ~isempty(strfind(names{j},'L_'))
             n=n+1;
             Lemg_raw = nan(90000,8); % 1min maximum as EMG recording (1500Hz * 60s)
             Lemg_filt = nan(101,8); % normalized data
             Lemg_name = [];
-            k1 = 1;
-            k2 = 1;
+            k1 = 0;
+            k2 = 0;
             for j = 1:length(names)
                 if ~isempty(strfind(names{j},'L_tibialis_anterior_Raw')) | ~isempty(strfind(names{j},'L_soleus_Raw')) | ~isempty(strfind(names{j},'L_gastrocnemius_medialis_Raw'))
-                    Lemg_raw(1:size(Condition(icondition).Trial(itrial).LowerLimb.EMG.(names{j}),1),k1) = ...
-                        Condition(icondition).Trial(itrial).LowerLimb.EMG.(names{j});
-                    Lemg_name{k1} = regexprep(names{j},'_Raw','');
                     k1 = k1+1;
+                    emg_raw(1:size(Condition(icondition).Trial(itrial).LowerLimb.EMG.(names{j}),1),k1) = ...
+                        Condition(icondition).Trial(itrial).LowerLimb.EMG.(names{j});
+                    emg_name{k1} = regexprep(names{j},'_Raw',''); 
                 end
                 if ~isempty(strfind(names{j},'L_tibialis_anterior_Envelop')) | ~isempty(strfind(names{j},'L_soleus_Envelop')) | ~isempty(strfind(names{j},'L_gastrocnemius_medialis_Envelop'))
-                    Lemg_filt.mean(1:size(Condition(icondition).Average.LowerLimb.EMG.(names{j}).mean,1),k2) = ...
-                        Condition(icondition).Average.LowerLimb.EMG.(names{j}).mean;
-                    Lemg_filt.std(1:size(Condition(icondition).Average.LowerLimb.EMG.(names{j}).mean,1),k2) = ...
-                        Condition(icondition).Average.LowerLimb.EMG.(names{j}).std;
                     k2 = k2+1;
+                    emg_filt.mean(1:size(Condition(icondition).Average.LowerLimb.EMG.(names{j}).mean,1),k2) = ...
+                        Condition(icondition).Average.LowerLimb.EMG.(names{j}).mean;
+                    emg_filt.std(1:size(Condition(icondition).Average.LowerLimb.EMG.(names{j}).mean,1),k2) = ...
+                        Condition(icondition).Average.LowerLimb.EMG.(names{j}).std;
                 end
             end
-            if ~exist(isize)
-                isize = size(find(~isnan(Lemg_raw(:,1))),1);
-            end
+            ngraphL=k1;
         end
         
+        % Plot Raw EMG
         if n==1
-            nmaxgraph=3;
-            xi = [1.50 11.50 11.50];
+            ngraph=k1;
+            xi = [x(1) x(3) x(3)];
             yi = [y1 y1 y1-yincr*5];
+            if ngraphR>0
+                ci = [0 0.8 0;0 0.8 0;0 0.8 0];
+            elseif ngraphL>1
+                ci = [0.8 0 0;0.8 0 0;0.8 0 0;];
+            end
         elseif n==2
-            nmaxgraph=6;
-            xi = [1.50 1.50 1.50 11.50 11.50 11.50];
+            ngraph=ngraphR+ngraphL;
+            xi = [x(1) x(1) x(1) x(3) x(3) x(3)];
             yi = [y1 y1-yincr*5 y1-yincr*10 y1 y1-yincr*5 y1-yincr*10];
+            xi = [xi(1:ngraphR) xi(4:4+ngraphL)];
+            yi = [yi(1:ngraphR) yi(4:4+ngraphL)];
+            ci = [0 0.8 0;0 0.8 0;0 0.8 0;0.8 0 0;0.8 0 0;0.8 0 0];  
         end
-        for i=1:nmaxgraph
+        
+        for i=1:ngraph
             igraph = igraph+1;
             y = yi(i);
             x1=xi(i);
@@ -482,104 +490,31 @@ if size(Condition,2) == 1
             set(Graph(igraph),'FontSize',8,'YGrid','on','XTick',[],'YTick',-50e-4:1e-4:50e-4);
             hold on;
             ylabel('Ampl.(uV)','FontSize',8,'HorizontalAlignment','center','VerticalAlignment','Middle');
+            isize = size(find(~isnan(emg_raw(:,i))),1);
             plot(1:isize,zeros(isize,1),'Linestyle','-','Linewidth',0.5,'Color','black');
-        
-        end
-        plot(Remg_raw(1:isize,1),'Linestyle','-','Linewidth',0.5,'Color',colorR(1,:));
-        title(regexprep(regexprep(Remg_name{1},'left_',''),'_',' '),'FontWeight','Bold');
-        axis tight;
-             for j=1:2
-                igraph = igraph+1;
-                isize = size(find(~isnan(Remg_raw(:,1))),1);
-                y = y1 - yincr*(j-1)*5;
-                x1=x(3);
-                axesGraph = axes;
-                set(axesGraph,'Position',[0 0 1 1]);
-                set(axesGraph,'Visible','Off');
-                Graph(igraph) = axes('position',[x1/pageWidth y/pageHeight ...
-                    graphWidth/pageWidth (graphHeight*2/3)/pageHeight]);
-                set(Graph(igraph),'FontSize',8,'YGrid','on','XTick',[],'YTick',-50e-4:1e-4:50e-4);
-                hold on;
-                title(regexprep(regexprep(Remg_name{j+1},'left_',''),'_',' '),'FontWeight','Bold');
-                ylabel('Ampl.(uV)','FontSize',8,'HorizontalAlignment','center','VerticalAlignment','Middle');
-                plot(1:isize,zeros(isize,1),'Linestyle','-','Linewidth',0.5,'Color','black');
-                plot(Remg_raw(1:isize,1),'Linestyle','-','Linewidth',0.5,'Color',colorR(1,:));
-                axis tight;
-            end
-        % ENVELOPPE
-            igraph = igraph+1;
-            y = y1;
-            x1=x(2);
-            axesGraph = axes;
-            set(axesGraph,'Position',[0 0 1 1]);
-            set(axesGraph,'Visible','Off');
-            Graph(igraph) = axes('position',[x1/pageWidth y/pageHeight ...
-                graphWidth/2/pageWidth (graphHeight*2/3)/pageHeight]);
-            xlabel('Gait cycle (%)','FontSize',8,'HorizontalAlignment','center','VerticalAlignment','Middle');
-            ylabel('Ampl.(%max)','FontSize',8,'HorizontalAlignment','center','VerticalAlignment','Middle');
-            hold on;
-                % Find norm
-    %             inorm = [];
-    %             names = fieldnames(Norm.EMG);
-    %             for i = 1:length(names)
-    %                 if strfind(regexprep(names{i},'right_',''),regexprep(Remg_name{g},'right_',''))
-    %                     inorm = Norm.EMG.(names{i});
-    %                 end
-    %             end
-    %             % Plot
-    %             if ~isempty(inorm)
-    %                 plot(inorm.mean(1:101,1)/max(inorm.mean(1:101,1)),'Linestyle','-','Linewidth',2,'Color',[0.5 0.5 0.5]);
-    %             end
-            plot(Remg_filt.mean(1:101,j)/max(Remg_filt.mean(1:101,1)),'Linestyle','-','Linewidth',2,'Color',colorR(1,:));
-            set(Graph(igraph),'FontSize',8,'YGrid','on','XTick',[0:50:100],'YTick',0:0.25:1,'YTickLabel',{'0' '25' '50' '75' '100'});
+            plot(emg_raw(1:isize,i),'Linestyle','-','Linewidth',0.5,'Color',ci(i,:));
+            title(regexprep(regexprep(emg_name{i},'left_',''),'_',' '),'FontWeight','Bold'); 
             axis tight;
-            axis([0 100 0 1]);
-            plot([Condition(icondition).Trial(itrial).LowerLimb.Spatiotemporal.R_Stance_Phase ...
-                Condition(icondition).Trial(itrial).LowerLimb.Spatiotemporal.R_Stance_Phase],...
-                [0 1],'Linestyle','--','Linewidth',1,'Color','black');
-            box on;
-            for j=1:2
-                igraph = igraph+1;
-                y = y1 - yincr*(j-1)*5;
-                x1=x(4);
-                axesGraph = axes;
-                set(axesGraph,'Position',[0 0 1 1]);
-                set(axesGraph,'Visible','Off');
-                Graph(igraph) = axes('position',[x1/pageWidth y/pageHeight ...
-                    graphWidth/2/pageWidth (graphHeight*2/3)/pageHeight]);
-                xlabel('Gait cycle (%)','FontSize',8,'HorizontalAlignment','center','VerticalAlignment','Middle');
-                ylabel('Ampl.(%max)','FontSize',8,'HorizontalAlignment','center','VerticalAlignment','Middle');
-                hold on;
-                % Find norm
-    %             inorm = [];
-    %             names = fieldnames(Norm.EMG);
-    %             for i = 1:length(names)
-    %                 if strfind(regexprep(names{i},'right_',''),regexprep(Remg_name{g},'right_',''))
-    %                     inorm = Norm.EMG.(names{i});
-    %                 end
-    %             end
-    %             % Plot
-    %             if ~isempty(inorm)
-    %                 plot(inorm.mean(1:101,1)/max(inorm.mean(1:101,1)),'Linestyle','-','Linewidth',2,'Color',[0.5 0.5 0.5]);
-    %             end
-                plot(Remg_filt.mean(1:101,j)/max(Remg_filt.mean(1:101,j+1)),'Linestyle','-','Linewidth',2,'Color',colorR(1,:));
-                set(Graph(igraph),'FontSize',8,'YGrid','on','XTick',[0:50:100],'YTick',0:0.25:1,'YTickLabel',{'0' '25' '50' '75' '100'});
-                axis tight;
-                axis([0 100 0 1]);
-                plot([Condition(icondition).Trial(itrial).LowerLimb.Spatiotemporal.R_Stance_Phase ...
-                    Condition(icondition).Trial(itrial).LowerLimb.Spatiotemporal.R_Stance_Phase],...
-                    [0 1],'Linestyle','--','Linewidth',1,'Color','black');
-                box on;
-            end
-
-        % Mise à échelle de tous les graphes
-            for j=igraph-5:igraph-3
-                axes(Graph(j));
-                YL = [-2e-4,2e-4];
-                XL = xlim;
-                XL(1) = max(XL(1),X_down);
-                XL(2) = min(XL(2),X_up);
-                axis([XL(1) XL(2) YL(1) YL(2)]);
+        end
+         % Mise à même échelle de tous les graphes & events
+        for j=igraph-2:igraph
+            axes(Graph(j));
+            YL = [-2e-4,2e-4];
+            XL = xlim;
+            XL(1) = max(XL(1),X_down);
+            XL(2) = min(XL(2),X_up);
+            axis([XL(1) XL(2) YL(1) YL(2)]);
+            if ~isempty(strfind(emg_name{i},'L_'))
+                plot([Condition(icondition).Trial(itrial).LowerLimb.Events.e.LHS(1)*Session(icondition).frq.fAnalog ...
+                    Condition(icondition).Trial(itrial).LowerLimb.Events.e.LHS(1)*Session(icondition).frq.fAnalog],...
+                    [YL(1) YL(2)],'Linestyle','-','Linewidth',1,'Color','black');
+                plot([Condition(icondition).Trial(itrial).LowerLimb.Events.e.LTO(end)*Session(icondition).frq.fAnalog ...
+                    Condition(icondition).Trial(itrial).LowerLimb.Events.e.LTO(end)*Session(icondition).frq.fAnalog],...
+                    [YL(1) YL(2)],'Linestyle','--','Linewidth',1,'Color','black');
+                plot([Condition(icondition).Trial(itrial).LowerLimb.Events.e.LHS(2)*Session(icondition).frq.fAnalog ...
+                    Condition(icondition).Trial(itrial).LowerLimb.Events.e.LHS(2)*Session(icondition).frq.fAnalog],...
+                    [YL(1) YL(2)],'Linestyle','-','Linewidth',1,'Color','black');
+            elseif ~isempty(strfind(emg_name{i},'R_'))
                 plot([Condition(icondition).Trial(itrial).LowerLimb.Events.e.RHS(1)*Session(icondition).frq.fAnalog ...
                     Condition(icondition).Trial(itrial).LowerLimb.Events.e.RHS(1)*Session(icondition).frq.fAnalog],...
                     [YL(1) YL(2)],'Linestyle','-','Linewidth',1,'Color','black');
@@ -589,8 +524,51 @@ if size(Condition,2) == 1
                 plot([Condition(icondition).Trial(itrial).LowerLimb.Events.e.RHS(2)*Session(icondition).frq.fAnalog ...
                     Condition(icondition).Trial(itrial).LowerLimb.Events.e.RHS(2)*Session(icondition).frq.fAnalog],...
                     [YL(1) YL(2)],'Linestyle','-','Linewidth',1,'Color','black');
-                box on;
             end
+            box on;
+        end
+            
+        % Plot ENVELOPPE
+        if n==1
+            xi = [x(2) x(4) x(4)];
+        elseif n==2
+            xi = [x(2) x(2) x(2) x(4) x(4) x(4)];
+        end
+        for i=1:ngraph
+            igraph = igraph+1;
+            y = yi(i);
+            x1=xi(i);
+            axesGraph = axes;
+            set(axesGraph,'Position',[0 0 1 1]);
+            set(axesGraph,'Visible','Off');
+            Graph(igraph) = axes('position',[x1/pageWidth y/pageHeight ...
+                graphWidth/2/pageWidth (graphHeight*2/3)/pageHeight]);
+            hold on;
+            xlabel('Gait cycle (%)','FontSize',8,'HorizontalAlignment','center','VerticalAlignment','Middle');
+            ylabel('Ampl.(%max)','FontSize',8,'HorizontalAlignment','center','VerticalAlignment','Middle');
+            hold on;
+            % Find & plot norm
+            inorm = [];
+            names = fieldnames(Norm.EMG);
+            for j = 1:length(names)
+                if ~isempty(strfind(names{j},emg_name{i}(3:end)))
+                    inorm = Norm.EMG.(names{j});
+                    plot(inorm.mean(1:101,1)/max(inorm.mean(1:101,1)),'Linestyle','-','Linewidth',2,'Color',[0.5 0.5 0.5]);
+                end
+            end
+            % plot enveloppe
+            plot(emg_filt.mean(1:101,i)/max(emg_filt.mean(1:101,i)),'Linestyle','-','Linewidth',2,'Color',ci(i,:));
+            set(Graph(igraph),'FontSize',8,'YGrid','on','XTick',[0:50:100],'YTick',0:0.25:1,'YTickLabel',{'0' '25' '50' '75' '100'});
+            axis tight;
+            axis([0 100 0 1]);
+            if ~isempty(strfind(emg_name{i},'L_'))
+                corridor(Levent.mean,Levent.std,ci(i,:));
+                plot([Levent.mean Levent.mean],[-180 180],'Linestyle','-','Linewidth',2,'Color',ci(i,:)); %IHS
+            elseif ~isempty(strfind(emg_name{i},'R_'))
+                corridor(Revent.mean,Revent.std,ci(i,:));
+                plot([Revent.mean Revent.mean],[-180 180],'Linestyle','-','Linewidth',2,'Color',ci(i,:)); %IHS
+            end
+            box on;
         end
     end
     
