@@ -111,12 +111,15 @@ if ~isempty(Condition(icondition).Trial(itrial).LowerLimb.EMG)
     hold on;
     axis off;
     nf=nf+1;
+    
     % Rehazenter banner
     % ---------------------------------------------------------------------
+    a=annotation('textbox',[0.015 0.925 0.970 0.06],'BackgroundColor','none','EdgeColor',[0 0 0],...
+            'LineStyle','-','LineWidth',0.5000,'Units','normalized');
     cd(pluginFolder);
-    banner = imread('banner','jpeg');
+    banner = imread('banner.png');
     axesImage = axes('position',...
-        [0 0.89 1 0.12]);
+        [0.05 0.93 0.2 0.0502]);
     image(banner);
     set(axesImage,'Visible','Off');
 
@@ -126,14 +129,14 @@ if ~isempty(Condition(icondition).Trial(itrial).LowerLimb.EMG)
     set(axesText,'Position',[0.47 0 1 1]);
     set(axesText,'Visible','Off');
     y = yinit;
-    y = y - 0.8;
+    y = y - 0.5;
     text(0.5/pageWidth,y/pageHeight,...
         'CNRFR - Rehazenter',...
-        'Color','w','FontSize',12);
+        'Color','k','FontSize',12);
     y = y - yincr;
     text(0.5/pageWidth,y/pageHeight,...
         'Laboratoire d''Analyse du Mouvement et de la Posture',...
-        'Color','w','FontSize',12);
+        'Color','k','FontSize',10);
 
     % Title
     % ---------------------------------------------------------------------
@@ -264,10 +267,12 @@ if ~isempty(Condition(icondition).Trial(itrial).LowerLimb.EMG)
 
         % Rehazenter banner
         % ---------------------------------------------------------------------
+        a=annotation('textbox',[0.015 0.925 0.970 0.06],'BackgroundColor','none','EdgeColor',[0 0 0],...
+                'LineStyle','-','LineWidth',0.5000,'Units','normalized');
         cd(pluginFolder);
-        banner = imread('banner','jpeg');
+        banner = imread('banner.png');
         axesImage = axes('position',...
-            [0 0.89 1 0.12]);
+            [0.05 0.93 0.2 0.0502]);
         image(banner);
         set(axesImage,'Visible','Off');
 
@@ -276,16 +281,15 @@ if ~isempty(Condition(icondition).Trial(itrial).LowerLimb.EMG)
         axesText = axes;
         set(axesText,'Position',[0.47 0 1 1]);
         set(axesText,'Visible','Off');
-        yinit = 29.0; %cm
         y = yinit;
-        y = y - 0.8;
+        y = y - 0.5;
         text(0.5/pageWidth,y/pageHeight,...
             'CNRFR - Rehazenter',...
-            'Color','w','FontSize',12);
+            'Color','k','FontSize',12);
         y = y - yincr;
         text(0.5/pageWidth,y/pageHeight,...
             'Laboratoire d''Analyse du Mouvement et de la Posture',...
-            'Color','w','FontSize',12);
+            'Color','k','FontSize',10);
 
         % Title
         % ---------------------------------------------------------------------
@@ -467,10 +471,12 @@ if ~isempty(Condition(icondition).Trial(itrial).LowerLimb.EMG)
 
     % Rehazenter banner
     % ---------------------------------------------------------------------
+    a=annotation('textbox',[0.015 0.925 0.970 0.06],'BackgroundColor','none','EdgeColor',[0 0 0],...
+            'LineStyle','-','LineWidth',0.5000,'Units','normalized');
     cd(pluginFolder);
-    banner = imread('banner','jpeg');
+    banner = imread('banner.png');
     axesImage = axes('position',...
-        [0 0.89 1 0.12]);
+        [0.05 0.93 0.2 0.0502]);
     image(banner);
     set(axesImage,'Visible','Off');
 
@@ -479,16 +485,15 @@ if ~isempty(Condition(icondition).Trial(itrial).LowerLimb.EMG)
     axesText = axes;
     set(axesText,'Position',[0.47 0 1 1]);
     set(axesText,'Visible','Off');
-    yinit = 29.0; %cm
     y = yinit;
-    y = y - 0.8;
+    y = y - 0.5;
     text(0.5/pageWidth,y/pageHeight,...
         'CNRFR - Rehazenter',...
-        'Color','w','FontSize',12);
+        'Color','k','FontSize',12);
     y = y - yincr;
     text(0.5/pageWidth,y/pageHeight,...
         'Laboratoire d''Analyse du Mouvement et de la Posture',...
-        'Color','w','FontSize',12);
+        'Color','k','FontSize',10);
 
     % Title
     % ---------------------------------------------------------------------
@@ -621,10 +626,12 @@ if ~isempty(Condition(icondition).Trial(itrial).LowerLimb.EMG)
 
         % Rehazenter banner
         % ---------------------------------------------------------------------
+        a=annotation('textbox',[0.015 0.925 0.970 0.06],'BackgroundColor','none','EdgeColor',[0 0 0],...
+                'LineStyle','-','LineWidth',0.5000,'Units','normalized');
         cd(pluginFolder);
-        banner = imread('banner','jpeg');
+        banner = imread('banner.png');
         axesImage = axes('position',...
-            [0 0.89 1 0.12]);
+            [0.05 0.93 0.2 0.0502]);
         image(banner);
         set(axesImage,'Visible','Off');
 
@@ -633,16 +640,15 @@ if ~isempty(Condition(icondition).Trial(itrial).LowerLimb.EMG)
         axesText = axes;
         set(axesText,'Position',[0.47 0 1 1]);
         set(axesText,'Visible','Off');
-        yinit = 29.0; %cm
         y = yinit;
-        y = y - 0.8;
+        y = y - 0.5;
         text(0.5/pageWidth,y/pageHeight,...
             'CNRFR - Rehazenter',...
-            'Color','w','FontSize',12);
+            'Color','k','FontSize',12);
         y = y - yincr;
         text(0.5/pageWidth,y/pageHeight,...
             'Laboratoire d''Analyse du Mouvement et de la Posture',...
-            'Color','w','FontSize',12);
+            'Color','k','FontSize',10);
 
         % Title
         % ---------------------------------------------------------------------

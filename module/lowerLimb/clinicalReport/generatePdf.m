@@ -49,12 +49,6 @@ if get(d(4),'Value')
     end
     list = dir('kinematics_*');
     if strfind(filename,'kinematics')
-%         if f(1) ~= 0
-%             print(f(1),'-dpdf','-r300','-opengl',[filename,'_',num2str(length(list)+1),'_temp.pdf']);
-%         end
-%         if length(f) > 1
-%             print(f(2),'-dpdf','-r300','-opengl',[filename,'_',num2str(length(list)+2),'_temp.pdf']);
-%         end
         if f(1) ~= 0
             print(f(1),'-dpdf',[filename,'_',num2str(length(list)+1),'_temp.pdf'],'-opengl');
         end
@@ -99,6 +93,15 @@ if get(d(4),'Value')
     end
     list = dir('indexes_*');
     if strfind(filename,'indexes')
+        if f(1) ~= 0
+            print(f(1),'-dpdf',[filename,'_',num2str(length(list)+1),'_temp.pdf'],'-opengl');
+        end
+        if length(f) > 1
+            print(f(2),'-dpdf',[filename,'_',num2str(length(list)+2),'_temp.pdf'],'-opengl');
+        end
+    end
+    list = dir('ankle_*');
+    if strfind(filename,'ankle')
         if f(1) ~= 0
             print(f(1),'-dpdf',[filename,'_',num2str(length(list)+1),'_temp.pdf'],'-opengl');
         end

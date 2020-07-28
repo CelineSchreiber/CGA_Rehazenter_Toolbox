@@ -311,7 +311,7 @@ if size(Condition,2) == 1
     box on;
     igraph = igraph+1;
     
-    if ~isempty(Jkinematics.L_Hip_Angle_FE.mean)
+    if ~isempty(Dynamics.L_Ankle_Moment_FE.mean) | ~isempty(Dynamics.R_Ankle_Moment_FE.mean)
         
         % Title
         % ---------------------------------------------------------------------
@@ -319,7 +319,7 @@ if size(Condition,2) == 1
         set(axesText,'Position',[0.47 0 1 1]);
         set(axesText,'Visible','Off');
         y = y - yincr*3;
-        text(0.02,y/pageHeight,'  Cinétique','Color','k','FontWeight','Bold','FontSize',14,'HorizontalAlignment','Center');
+        text(0.02,y/pageHeight,'  Cinétique de la cheville','Color','k','FontWeight','Bold','FontSize',14,'HorizontalAlignment','Center');
 
         % Right/Left ankle flexion/extension moment
         % ---------------------------------------------------------------------
@@ -331,7 +331,7 @@ if size(Condition,2) == 1
             graphWidth/pageWidth graphHeight/pageHeight]);
         set(Graph(igraph),'FontSize',8,'YGrid','on','XTick',[0 25 50 75 100],'YTick',-10:0.05:10);
         hold on;
-        title('Ankle flexion/extension moment (Dorsi+)','FontWeight','Bold');
+        title('Flexion/extension moment (Dorsi+)','FontWeight','Bold');
         xlabel('Gait cycle (%)','FontSize',8,'HorizontalAlignment','center','VerticalAlignment','Middle'); ylabel('Moment (adimensioned)','FontSize',8,'HorizontalAlignment','center','VerticalAlignment','Middle'); 
         plot(1:100,zeros(100,1),'Linestyle','-','Linewidth',0.5,'Color','black');
         corridor(Norm.Kinetics.FE2.mean,Norm.Kinetics.FE2.std,[0.5 0.5 0.5]);
@@ -360,7 +360,7 @@ if size(Condition,2) == 1
             graphWidth/pageWidth graphHeight/pageHeight]);
         set(Graph(igraph),'FontSize',8,'YGrid','on','XTick',[0 25 50 75 100],'YTick',-10:0.2:10);
         hold on;
-        title('Ankle flexion/extension power (Flex+)','FontWeight','Bold');
+        title('Flexion/extension power (Flex+)','FontWeight','Bold');
         xlabel('Gait cycle (%)','FontSize',8,'HorizontalAlignment','center','VerticalAlignment','Middle'); ylabel('Power (adimensioned)','FontSize',8,'HorizontalAlignment','center','VerticalAlignment','Middle'); 
         plot(1:100,zeros(100,1),'Linestyle','-','Linewidth',0.5,'Color','black');
         corridor(Norm.Kinetics.Power2.mean,Norm.Kinetics.Power2.std,[0.5 0.5 0.5]);

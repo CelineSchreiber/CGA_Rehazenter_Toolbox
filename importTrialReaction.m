@@ -13,34 +13,26 @@
 function [Grf,tGrf] = importTrialReaction(Event,Forceplate,tGrf,Grf,btk2,n0,n,fMarker,fAnalog)
 
 for j = 1:size(Forceplate,1)
+     
+    Grf(j).M = Grf(j).M*10^(-3); % Convert from Nmm to Nm
+    Grf(j).P = Grf(j).P*10^(-3);
+    
     % Replace NaN by zeros
-    temp = tGrf(j).F(:,1); temp(isnan(temp)) = 0; tGrf(j).F(:,1) = temp;
-    temp = tGrf(j).F(:,2); temp(isnan(temp)) = 0; tGrf(j).F(:,2) = temp;
-    temp = tGrf(j).F(:,3); temp(isnan(temp)) = 0; tGrf(j).F(:,3) = temp;
-    temp = tGrf(j).M(:,1); temp(isnan(temp)) = 0; tGrf(j).M(:,1) = temp;
-    temp = tGrf(j).M(:,2); temp(isnan(temp)) = 0; tGrf(j).M(:,2) = temp;
-    temp = tGrf(j).M(:,3); temp(isnan(temp)) = 0; tGrf(j).M(:,3) = temp;
-    temp = Grf(j).F(:,1); temp(isnan(temp)) = 0; Grf(j).F(:,1) = temp;
-    temp = Grf(j).F(:,2); temp(isnan(temp)) = 0; Grf(j).F(:,2) = temp;
-    temp = Grf(j).F(:,3); temp(isnan(temp)) = 0; Grf(j).F(:,3) = temp;
-    temp = Grf(j).M(:,1); temp(isnan(temp)) = 0; Grf(j).M(:,1) = temp;
-    temp = Grf(j).M(:,2); temp(isnan(temp)) = 0; Grf(j).M(:,2) = temp;
-    temp = Grf(j).M(:,3); temp(isnan(temp)) = 0; Grf(j).M(:,3) = temp;
+    tGrf(j).F = interpNaN(tGrf(j).F);
+    tGrf(j).M = interpNaN(tGrf(j).M);
+    Grf(j).F  = interpNaN(Grf(j).F);
+    Grf(j).M  = interpNaN(Grf(j).M);
+    
     % Low pass filter (Butterworth 4nd order, 15 Hz)
     [B,A] = butter(2,15/(fAnalog/2),'low'); %4?
-    tGrf(j).F(:,1) = filtfilt(B,A,tGrf(j).F(:,1));
-    tGrf(j).F(:,2) = filtfilt(B,A,tGrf(j).F(:,2));
-    tGrf(j).F(:,3) = filtfilt(B,A,tGrf(j).F(:,3));
-    tGrf(j).M(:,1) = filtfilt(B,A,tGrf(j).M(:,1));
-    tGrf(j).M(:,2) = filtfilt(B,A,tGrf(j).M(:,2));
-    tGrf(j).M(:,3) = filtfilt(B,A,tGrf(j).M(:,3));
-    Grf(j).F(:,1) = filtfilt(B,A,Grf(j).F(:,1));
-    Grf(j).F(:,2) = filtfilt(B,A,Grf(j).F(:,2));
-    Grf(j).F(:,3) = filtfilt(B,A,Grf(j).F(:,3));
-    Grf(j).M(:,1) = filtfilt(B,A,Grf(j).M(:,1));
-    Grf(j).M(:,2) = filtfilt(B,A,Grf(j).M(:,2));
-    Grf(j).M(:,3) = filtfilt(B,A,Grf(j).M(:,3));
-    % Apply a 5N threshold
+    for i=1:3
+        tGrf(j).F(:,i) = filtfilt(B,A,tGrf(j).F(:,i));
+        tGrf(j).M(:,i) = filtfilt(B,A,tGrf(j).M(:,i));
+        Grf(j).F(:,i) = filtfilt(B,A,Grf(j).F(:,i));
+        Grf(j).M(:,i) = filtfilt(B,A,Grf(j).M(:,i));
+    end
+    
+    % Apply a 10N threshold
     threshold = 10; %50?
     for k = 1:length(tGrf(j).F)
         if tGrf(j).F(k,3) < threshold  % vertical tGrf threshold
@@ -52,6 +44,18 @@ for j = 1:size(Forceplate,1)
             Grf(j).M(k,:) = zeros(1,3);
         end
     end
+    
+    % Correction of COP
+    for i=1:3
+        I=[];
+        I=find(abs(Grf(j).P(:,i))>1);
+        if ~isempty(I)
+            for k=1:length(I)
+                Grf(j).P(I(k),i)=0;
+            end
+        end
+    end
+
     % Keep only cycle data (keep 5 frames before and after first and last
     % event)    
     events = round(sort([Event.RHS,Event.RTO,Event.LHS,Event.LTO])*fMarker)-...
@@ -64,9 +68,8 @@ for j = 1:size(Forceplate,1)
     Grf(j).F = Grf(j).F(events(1)*fAnalog/fMarker-extra:events(end)*fAnalog/fMarker+extra,:);
     Grf(j).M = Grf(j).M(events(1)*fAnalog/fMarker-extra:events(end)*fAnalog/fMarker+extra,:);
     Grf(j).P = Grf(j).P(events(1)*fAnalog/fMarker-extra:events(end)*fAnalog/fMarker+extra,:);
+    
     % Additional treatments for Matlab process
-    Grf(j).M = Grf(j).M*10^(-3); % Convert from Nmm to Nm
-    Grf(j).P = Grf(j).P*10^(-3);
     Grf(j).P = [Grf(j).P(:,1) Grf(j).P(:,3) -Grf(j).P(:,2)]; % Modify the ICS
     Grf(j).F = [Grf(j).F(:,1) Grf(j).F(:,3) -Grf(j).F(:,2)];
     Grf(j).M = [zeros(size(Grf(j).M(:,3))) -Grf(j).M(:,3) zeros(size(Grf(j).M(:,3)))];
